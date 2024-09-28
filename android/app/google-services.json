@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "382985641726",
+    "project_id": "microlearning-ea3cc",
+    "storage_bucket": "microlearning-ea3cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382985641726:android:9bb0402c49a62907294faf",
+        "android_client_info": {
+          "package_name": "com.example.microlearning"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApiK8FVluT4h1ElBY2kzi2Iine44Szkt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
