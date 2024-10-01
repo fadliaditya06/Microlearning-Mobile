@@ -3,8 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import './launcher.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
 
+  // Inisialisasi Firebase
   try {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -15,12 +16,13 @@ Future<void> main() async {
         storageBucket: "microlearning-ea3cc.appspot.com",
       ),
     );
+    print('Firebase initialized successfully.'); // Konfirmasi inisialisasi berhasil
   } catch (e) {
     // Penanganan kesalahan jika Firebase gagal diinisialisasi
     print('Error initializing Firebase: $e');
   }
 
-  runApp(const MyApp());
+  runApp(const MyApp()); // Jalankan aplikasi utama
 }
 
 class MyApp extends StatelessWidget {
@@ -34,7 +36,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 40, 121, 128)),
         useMaterial3: true,
       ),
-      home: const LauncherPage(),
+      home: const LauncherPage(), // Ganti dengan halaman utama aplikasi Anda
+      debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
     );
   }
 }
