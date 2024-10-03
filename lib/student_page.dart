@@ -137,7 +137,7 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContentState extends State<HomeContent> {
   
-  List<bool> _isHovered = List.generate(5, (_) => false);
+  final List<bool> _isHovered = List.generate(5, (_) => false);
 
   // Daftar gambar untuk setiap kartu
   final List<String> _images = [

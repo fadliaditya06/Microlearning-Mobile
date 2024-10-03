@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:file_picker/file_picker.dart'; // Untuk web
-import 'package:flutter/foundation.dart' show kIsWeb; // Untuk mendeteksi platform
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Untuk Android/iOS
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Untuk autentikasi Firebase
-import 'package:cloud_firestore/cloud_firestore.dart'; // Untuk Firestore
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -20,10 +19,11 @@ class _ProfilePageState extends State<ProfilePage> {
   final ImagePicker _imagePicker = ImagePicker();
   String? imageUrl;
 
-  // Kontrol untuk input nama, info, dan password
   final TextEditingController nameController = TextEditingController();
   final TextEditingController infoController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  int _selectedIndex = 1;
 
   @override
   void initState() {
@@ -31,7 +31,19 @@ class _ProfilePageState extends State<ProfilePage> {
     fetchUserData();
   }
 
-  // Mengambil data pengguna dari Firestore
+  // Fungsi untuk mengubah halaman saat navigasi ditekan
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    if (index == 0) {
+      Navigator.pushNamed(context, '/student_page');
+    } else if (index == 2) {
+      Navigator.pushNamed(context, '/quiz_page');
+    }
+  }
+
   Future<void> fetchUserData() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -48,13 +60,11 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Fungsi untuk memilih gambar
   Future<void> pickImage() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user == null) {
-        // Jika pengguna belum terautentikasi
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Pengguna belum terautentikasi. Harap masuk terlebih dahulu.'),
@@ -64,14 +74,12 @@ class _ProfilePageState extends State<ProfilePage> {
       }
 
       if (kIsWeb) {
-        // Logika untuk platform Web
         FilePickerResult? result = await FilePicker.platform.pickFiles();
 
         if (result != null && result.files.single.bytes != null) {
           await uploadImageToFirebaseWeb(result.files.single.bytes!, user.uid);
         }
       } else {
-        // Logika untuk platform mobile (Android/iOS)
         XFile? res = await _imagePicker.pickImage(source: ImageSource.gallery);
         if (res != null) {
           await uploadImageToFirebase(File(res.path), user.uid);
@@ -93,27 +101,23 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Fungsi untuk mengunggah gambar di Firebase (untuk web)
   Future<void> uploadImageToFirebaseWeb(Uint8List imageBytes, String userId) async {
     try {
       final storageRef = FirebaseStorage.instance.ref();
       final reference = storageRef.child("images/${DateTime.now().microsecondsSinceEpoch}.png");
 
-      // Mengunggah gambar dari bytes
       await reference.putData(imageBytes);
 
-      // Dapatkan URL download
       final url = await reference.getDownloadURL();
       setState(() {
-        imageUrl = url; // Perbarui state dengan URL gambar
+        imageUrl = url;
       });
 
-      // Simpan URL ke Firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'imageUrl': url,
         'name': nameController.text,
         'info': infoController.text,
-      }, SetOptions(merge: true)); // Merge untuk tidak menghapus field lainnya
+      }, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -131,27 +135,23 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Fungsi untuk mengunggah gambar di Firebase (untuk mobile)
   Future<void> uploadImageToFirebase(File image, String userId) async {
     try {
       final storageRef = FirebaseStorage.instance.ref();
       final reference = storageRef.child("images/${DateTime.now().microsecondsSinceEpoch}.png");
 
-      // Mengunggah file gambar
       await reference.putFile(image);
 
-      // Dapatkan URL download
       final url = await reference.getDownloadURL();
       setState(() {
-        imageUrl = url; // Perbarui state dengan URL gambar
+        imageUrl = url;
       });
 
-      // Simpan URL ke Firestore
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'imageUrl': url,
         'name': nameController.text,
         'info': infoController.text,
-      }, SetOptions(merge: true)); // Merge untuk tidak menghapus field lainnya
+      }, SetOptions(merge: true));
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -167,6 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
     }
+  }
+
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, '/student_page', (route) => false);
   }
 
   @override
@@ -282,9 +287,43 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _logout,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow, // Ubah warna latar belakang tombol
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.quiz),
+            label: 'Quiz',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.yellow,
+        onTap: _onItemTapped,
       ),
     );
   }
