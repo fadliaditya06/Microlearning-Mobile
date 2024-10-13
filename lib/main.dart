@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart'; // Tambahkan import untuk logger
-import './launcher.dart';
+import 'login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
@@ -35,12 +35,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'Microlearning',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 40, 121, 128)),
         useMaterial3: true,
       ),
-      home: const LauncherPage(), // Ganti dengan halaman utama aplikasi Anda
+      home: const LoginForm(), // Ganti dengan halaman utama aplikasi Anda
       debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
     );
   }

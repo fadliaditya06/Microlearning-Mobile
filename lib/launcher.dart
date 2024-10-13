@@ -75,7 +75,7 @@ class LauncherPageState extends State<LauncherPage> {
             children: [
               ClipOval(
                 child: Image.asset(
-                  "assets/logo.png",
+                  "assets/images/ASET-PPDB.png",
                   height: 120.0,
                   width: 120.0,
                   fit: BoxFit.cover,

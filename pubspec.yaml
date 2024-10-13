@@ -40,18 +40,11 @@ dev_dependencies:
     sdk: flutter
   simple_animations: ^5.0.2
   flutter_lints: ^4.0.0
+  google_fonts: ^5.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/logo.png
-    - assets/login.png
-    - assets/logo-ulilalbab.png
-    - assets/ASET-PPDB.png
-    - assets/cropped-Brand-Logo-ua.png
-    - assets/Logo-SDIT.jpg
-    - assets/Logo-SMAIT.png
-    - assets/Logo-SMPIT.png
-    - assets/Logo-TK.png
-    - assets/TPA_ua.png
+    - assets/images/
+    
