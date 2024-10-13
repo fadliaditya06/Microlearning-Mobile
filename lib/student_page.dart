@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'materi_page.dart'; // Import halaman Materi
 import 'quiz_page.dart';   // Import halaman Quiz
 import 'profile_page.dart'; // Import halaman Profile
-import 'launcher.dart';     // Untuk navigasi setelah logout
 
 class StudentPage extends StatefulWidget {
   const StudentPage({super.key});
@@ -13,7 +11,6 @@ class StudentPage extends StatefulWidget {
 }
 
 class _StudentPageState extends State<StudentPage> {
-  bool _isLoading = false;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -32,33 +29,68 @@ class _StudentPageState extends State<StudentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: _showLogoutConfirmationDialog, // Tampilkan modal logout
-          icon: const Icon(
-            Icons.logout,
-            color: Color.fromARGB(255, 0, 0, 0),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfilePage(), // Navigasi ke halaman Profile
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.person, // Ikon Profile di kanan atas
-              color: Color.fromARGB(255, 0, 0, 0),
+        toolbarHeight: 0, // Mengatur tinggi toolbar
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Column(
+        children: <Widget>[
+          // Header setengah lingkaran
+          Container(
+            height: 150,
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 253, 240, 69),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(150),
+                bottomRight: Radius.circular(150),
+              ),
             ),
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  top: -30,
+                  left: 15,
+                  width: 200,
+                  height: 200,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/logo-ulilalbab.png'),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  right: 25,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.person,
+                      size: 40,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // Konten Utama
+          Expanded(
+            child: _pages[_selectedIndex],
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -66,7 +98,7 @@ class _StudentPageState extends State<StudentPage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book), // Ikon materi
+            icon: Icon(Icons.book),
             label: 'Materi',
           ),
           BottomNavigationBarItem(
@@ -79,52 +111,10 @@ class _StudentPageState extends State<StudentPage> {
         backgroundColor: const Color.fromARGB(255, 255, 234, 0),
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.black,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
       ),
     );
-  }
-
-  void _showLogoutConfirmationDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Konfirmasi'),
-          content: const Text('Apakah yakin ingin keluar?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Tutup modal
-              },
-              child: const Text('Batal'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Tutup modal
-                logout(); // Melakukan logout
-              },
-              child: const Text('Yakin'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> logout() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    await FirebaseAuth.instance.signOut();
-
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LauncherPage(),
-        ),
-      );
-    }
   }
 }
 
@@ -136,72 +126,69 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  
+  // Daftar hover untuk setiap kartu
   final List<bool> _isHovered = List.generate(5, (_) => false);
 
   // Daftar gambar untuk setiap kartu
   final List<String> _images = [
-    'assets/TPA_ua.png', 
-    'assets/Logo-TK.png', 
-    'assets/Logo-SDIT.jpg', 
-    'assets/Logo-SMPIT.png', 
-    'assets/Logo-SMAIT.png', 
+    'assets/TPA_ua.png',
+    'assets/Logo-TK.png',
+    'assets/Logo-SDIT.jpg',
+    'assets/Logo-SMPIT.png',
+    'assets/Logo-SMAIT.png',
   ];
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 100),
-          const Center(
-            child: CircleAvatar(
-              radius: 60, // Logo size
-              backgroundImage: AssetImage('assets/ASET-PPDB.png'), 
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, // Mengatur posisi teks ke kiri
+          children: [
+            const SizedBox(height: 20),
+            const Center(
+              child: CircleAvatar(
+                radius: 100, // Ukuran logo
+                backgroundImage: AssetImage('assets/ASET-PPDB.png'),
+              ),
             ),
-          ),
-          const SizedBox(height: 20), 
-          const Text(
-            'YAYASAN ULIL ALBAB BATAM',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0), 
-            child: Text(
-              'Merupakan Lembaga Pendidikan Islam Rujukan di Provinsi Kepulauan Riau, alhamdulillah saat ini masih diberi amanah mengelola jenjang Pendidikan Tingkat TKIT, SDIT, SMPIT Dan SMAIT. Adapun lembaga pendidikan ini menyelenggarakan Pendidikan yang Berlandaskan pada Nilai-Nilai Ajaran Islam Dengan Berorientasi pada Terbentuknya Generasi Rabbani yaitu Cerdas, Sholih dan Berkarakter Qur\'ani.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+            const SizedBox(height: 20),
+            const Center(
+              child: Text(
+                'YAYASAN ULIL ALBAB BATAM',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-          const Text(
-            "Jenjang Pendidikan",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-
-          // Blue background container
-          Container(
-            color: Colors.blue, // Blue background
-            padding: const EdgeInsets.all(16.0),
-            child: GridView.builder(
+            const SizedBox(height: 10),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Merupakan Lembaga Pendidikan Islam Rujukan di Provinsi Kepulauan Riau, alhamdulillah saat ini masih diberi amanah mengelola jenjang Pendidikan Tingkat TKIT, SDIT, SMPIT Dan SMAIT.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 30),
+            const Text(
+              "Jenjang Pendidikan",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Jumlah kolom
-                childAspectRatio: 1, // Rasio aspek untuk menjaga ukuran kartu
-                crossAxisSpacing: 20, // Spacing horizontal antar kartu
-                mainAxisSpacing: 20, // Spacing vertikal antar kartu
+                crossAxisCount: 2,
+                childAspectRatio: 1,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 20,
               ),
               itemCount: _images.length,
-              shrinkWrap: true, 
-              physics: const NeverScrollableScrollPhysics(), 
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return _buildCard(
                   index: index,
-                  image: _images[index], 
+                  image: _images[index],
                   title: index == 0
                       ? 'Taman Penitipan'
                       : index == 1
@@ -214,23 +201,9 @@ class _HomeContentState extends State<HomeContent> {
                 );
               },
             ),
-          ),
-
-          const SizedBox(height: 50), 
-          
-         
-          SizedBox(
-            height: 50,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildScrollingText("Info: Kegiatan akan dimulai pukul 08:00 setiap hari Senin"),
-                _buildScrollingText("Info: Pendaftaran untuk kegiatan ekstrakurikuler dibuka sampai akhir bulan ini"),
-                _buildScrollingText("Info: Harap membawa buku pelajaran setiap kali masuk kelas"),
-              ],
-            ),
-          ),
-        ],
+            const SizedBox(height: 50),
+          ],
+        ),
       ),
     );
   }
@@ -238,22 +211,20 @@ class _HomeContentState extends State<HomeContent> {
   Widget _buildCard({required int index, required String image, required String title}) {
     return MouseRegion(
       onEnter: (_) {
-        // Animasi saat mouse masuk
         setState(() {
-          _isHovered[index] = true; 
+          _isHovered[index] = true;
         });
       },
       onExit: (_) {
-        // Kembali ke posisi semula saat mouse keluar
         setState(() {
           _isHovered[index] = false;
         });
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        transform: Matrix4.translationValues(0, _isHovered[index] ? -10 : 0, _isHovered[index] ? 10 : 0), // Memberikan efek kedalaman
+        transform: Matrix4.translationValues(0, _isHovered[index] ? -10 : 0, 0),
         child: Card(
-          elevation: _isHovered[index] ? 10 : 4, 
+          elevation: _isHovered[index] ? 10 : 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -263,8 +234,8 @@ class _HomeContentState extends State<HomeContent> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  radius: 40, // Logo size
-                  backgroundImage: AssetImage(image), 
+                  radius: 40,
+                  backgroundImage: AssetImage(image),
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -278,19 +249,6 @@ class _HomeContentState extends State<HomeContent> {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScrollingText(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 16,
-          color: Colors.white,
         ),
       ),
     );

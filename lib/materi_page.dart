@@ -7,18 +7,19 @@ class MateriPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Materi'), // Menambahkan judul untuk AppBar
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start, // Mengubah untuk merapat ke atas
             children: [
               const SizedBox(height: 20), // Padding atas
-              _buildMateriBox(context, "Mtk"),
+              _buildMateriBox(context, "Matematika"),
               const SizedBox(height: 20), // Jarak antar box
               _buildMateriBox(context, "Biologi"),
               const SizedBox(height: 20), // Jarak antar box
-              _buildMateriBox(context, "PKn"),
+              _buildMateriBox(context, "PKN"),
               const SizedBox(height: 20), // Jarak antar box
               _buildMateriBox(context, "Fisika"),
             ],
@@ -74,9 +75,9 @@ class KelasPage extends StatelessWidget {
       body: Center(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(10, (index) {
-              int kelasNumber = index + 1; 
+            mainAxisAlignment: MainAxisAlignment.start, // Mengubah agar rapat ke atas
+            children: List.generate(3, (index) {
+              int kelasNumber = index + 10; // Kelas 10, 11, 12
               return _buildKelasBox(kelasNumber);
             }),
           ),

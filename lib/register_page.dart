@@ -7,10 +7,10 @@ class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  RegisterState createState() => RegisterState();
 }
 
-class _RegisterState extends State<RegisterPage> {
+class RegisterState extends State<RegisterPage> {
   bool showProgress = false;
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
@@ -18,13 +18,17 @@ class _RegisterState extends State<RegisterPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController roleIdController = TextEditingController(); // Digunakan untuk NISN/NIP
+  String _selectedGender = 'Male'; // Pilihan gender default
 
   bool _isObscure = true;
 
   var options = ['Student', 'Teacher', 'Admin'];
-  String _currentItemSelected = "Student";
-  String role = "Student";
+  String role = "Student"; // Role default
+
+  var kelasOptions = ['10', '11', '12']; // Opsi kelas
+  String? selectedkelas; // Kelas yang dipilih
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +36,13 @@ class _RegisterState extends State<RegisterPage> {
       appBar: AppBar(
         title: const Text('Register Page'),
       ),
-      body: Padding(
+      body: SingleChildScrollView( // Tambahkan SingleChildScrollView untuk fitur scroll
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
+              // Input nama
               TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
@@ -48,9 +53,10 @@ class _RegisterState extends State<RegisterPage> {
                   return null;
                 },
               ),
+              // Input email
               TextFormField(
-                controller: usernameController,
-                decoration: const InputDecoration(labelText: 'Username (Email)'),
+                controller: emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -58,6 +64,7 @@ class _RegisterState extends State<RegisterPage> {
                   return null;
                 },
               ),
+              // Input password
               TextFormField(
                 controller: passwordController,
                 obscureText: _isObscure,
@@ -81,6 +88,7 @@ class _RegisterState extends State<RegisterPage> {
                   return null;
                 },
               ),
+              // Input konfirmasi password
               TextFormField(
                 controller: confirmPassController,
                 obscureText: _isObscure,
@@ -92,13 +100,49 @@ class _RegisterState extends State<RegisterPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20), // Spacing between fields
+              const SizedBox(height: 20),
+
+              // Pilihan Gender dengan RadioListTile
+              const Text('Select Gender'),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text('Male'),
+                      value: 'Male',
+                      groupValue: _selectedGender,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedGender = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: const Text('Female'),
+                      value: 'Female',
+                      groupValue: _selectedGender,
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedGender = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+
+              // Dropdown untuk memilih role (Student, Teacher, Admin)
               DropdownButtonFormField<String>(
-                value: _currentItemSelected,
+                value: role,
                 onChanged: (String? newValue) {
                   setState(() {
-                    _currentItemSelected = newValue!;
-                    role = newValue;
+                    role = newValue!;
+                    if (role != 'Student') {
+                      selectedkelas = null; // Reset kelas jika bukan student
+                    }
                   });
                 },
                 items: options.map<DropdownMenuItem<String>>((String value) {
@@ -112,10 +156,62 @@ class _RegisterState extends State<RegisterPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 20), // Spacing before the button
+              const SizedBox(height: 20), // Spasi antara field
+
+              // Tampilkan NISN atau NIP berdasarkan role yang dipilih
+              if (role == 'Student') ...[
+                TextFormField(
+                  controller: roleIdController,
+                  decoration: const InputDecoration(labelText: 'NISN'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your NISN';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20), // Spasi sebelum pemilihan kelas
+                DropdownButtonFormField<String>(
+                  value: selectedkelas,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedkelas = newValue; // Simpan kelas yang dipilih
+                    });
+                  },
+                  items: kelasOptions.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Pilih kelas',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select your class';
+                    }
+                    return null;
+                  },
+                ),
+              ] else if (role == 'Teacher' || role == 'Admin') ...[
+                TextFormField(
+                  controller: roleIdController,
+                  decoration: const InputDecoration(labelText: 'NIP'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your NIP';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+              const SizedBox(height: 20), // Spasi sebelum tombol
+
               ElevatedButton(
                 onPressed: () async {
-                  await signUp(usernameController.text, passwordController.text, role);
+                  await signUp(emailController.text, passwordController.text, role);
                 },
                 child: const Text('Register'),
               ),
@@ -129,49 +225,54 @@ class _RegisterState extends State<RegisterPage> {
 
   Future<void> signUp(String email, String password, String role) async {
     setState(() {
-      showProgress = true; // Show loading indicator
+      showProgress = true; // Tampilkan indikator loading
     });
 
     if (_formKey.currentState!.validate()) {
       try {
-        // Create user with email and password
-        await _auth.createUserWithEmailAndPassword(
-          email: email, // Use email directly from input
+        // Buat pengguna dengan email dan password
+        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+          email: email,
           password: password,
         );
 
-        // Save user data to Firestore
-        await postDetailsToFirestore(email, role); // Call the method to save user data
+        // Simpan data pengguna ke Firestore
+        await postDetailsToFirestore(userCredential.user!.uid); // Panggil metode untuk menyimpan data pengguna
 
-        // Navigate to login page or home page
+        // Navigasi ke halaman login
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const LoginPage()),
         );
       } on FirebaseAuthException catch (e) {
-        // Handle errors here
+        // Tangani kesalahan di sini
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message ?? 'Registration failed')),
         );
       } finally {
         setState(() {
-          showProgress = false; // Hide loading indicator
+          showProgress = false; // Sembunyikan indikator loading
         });
       }
     } else {
       setState(() {
-        showProgress = false; // Hide loading indicator if form is invalid
+        showProgress = false; // Sembunyikan indikator loading jika form tidak valid
       });
     }
   }
 
-  Future<void> postDetailsToFirestore(String email, String role) async {
-    User? user = _auth.currentUser; // Get current user
+  Future<void> postDetailsToFirestore(String uid) async {
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
 
-    // Save user data
-    await ref.doc(user!.uid).set({
-      'email': email, // Use the email directly from input
-      'role': role,
+    // Simpan data pengguna
+    await ref.doc(uid).set({
+      'name': nameController.text, // Simpan nama
+      'email': emailController.text,
+      'password': passwordController.text, // Simpan email
+      'role': role, // Simpan role
+      'gender': _selectedGender, // Simpan gender
+      if (role == 'Student') 'nisn': roleIdController.text, // Simpan NISN jika role adalah Student
+      if (role == 'Teacher' || role == 'Admin') 'nip': roleIdController.text, // Simpan NIP jika role adalah Teacher/Admin
+      if (role == 'Student') 'kelas': selectedkelas, // Simpan kelas jika role adalah Student
     });
   }
 }

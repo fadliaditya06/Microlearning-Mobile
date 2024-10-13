@@ -10,7 +10,7 @@ class LauncherPage extends StatefulWidget {
 }
 
 class LauncherPageState extends State<LauncherPage> {
-  final List<String> words = ['Welcome', 'Rikardo'];
+  final List<String> words = ['Selamat Datang', 'Pengguna'];
   final List<double> positions = [-100.0, -100.0];
 
   @override

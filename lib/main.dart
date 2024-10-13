@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:logger/logger.dart'; // Tambahkan import untuk logger
 import './launcher.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
+
+  // Inisialisasi Logger
+  final Logger logger = Logger();
 
   // Inisialisasi Firebase
   try {
@@ -16,10 +20,10 @@ Future<void> main() async {
         storageBucket: "microlearning-ea3cc.appspot.com",
       ),
     );
-    print('Firebase initialized successfully.'); // Konfirmasi inisialisasi berhasil
+    logger.i('Firebase initialized successfully.'); // Konfirmasi inisialisasi berhasil
   } catch (e) {
     // Penanganan kesalahan jika Firebase gagal diinisialisasi
-    print('Error initializing Firebase: $e');
+    logger.e('Error initializing Firebase: $e'); // Log error
   }
 
   runApp(const MyApp()); // Jalankan aplikasi utama
