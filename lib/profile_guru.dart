@@ -12,18 +12,17 @@ class UserModel {
   final String? id;
   final String name;
   final String email;
-  final String kelas;
+  
   final String gender;
-  final String nisn;
+  final String nip;
   final String password;
 
   const UserModel({
     this.id,
     required this.email,
     required this.name,
-    required this.kelas,
     required this.gender,
-    required this.nisn,
+    required this.nip,
     required this.password,
   });
 
@@ -32,9 +31,8 @@ class UserModel {
       "id": id,
       "name": name,
       "email": email,
-      "kelas": kelas,
       "gender": gender,
-      "nisn": nisn,
+      "nip": nip,
       "password": password,
     };
   }
@@ -45,22 +43,21 @@ class UserModel {
       id: document.id,
       email: data['email'] ?? '',
       name: data['name'] ?? 'Tidak ada nama',
-      kelas: data['kelas'] ?? 'Tidak ada kelas',
       gender: data['gender'] ?? 'Tidak ada gender',
-      nisn: data['nisn'] ?? 'Tidak ada NISN',
+      nip: data['nip'] ?? 'Tidak ada NISN',
       password: data['password'] ?? '',
     );
   }
 }
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfileGuru extends StatefulWidget {
+  const ProfileGuru({super.key});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  ProfileGuruState createState() => ProfileGuruState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfileGuruState extends State<ProfileGuru> {
   io.File? imageFile; // Untuk Android/iOS
   Uint8List? imageBytes; // Untuk Web
   String? imageUrl;
@@ -262,9 +259,8 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         _buildUserInfoCard("Nama", userModel!.name),
         _buildUserInfoCard("Email", userModel!.email),
-        _buildUserInfoCard("Kelas", userModel!.kelas),
         _buildUserInfoCard("Gender", userModel!.gender),
-        _buildUserInfoCard("NISN", userModel!.nisn),
+        _buildUserInfoCard("NIP", userModel!.nip),
         _buildUserInfoCard("Password", userModel!.password, isPassword: true),
       ],
     );

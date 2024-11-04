@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:logger/logger.dart'; // Tambahkan import untuk logger
-import 'login_page.dart';
+import './launcher.dart';
+
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // Inisialisasi Logger
-  final Logger logger = Logger();
-
-  // Inisialisasi Firebase
   try {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -20,13 +16,12 @@ Future<void> main() async {
         storageBucket: "microlearning-ea3cc.appspot.com",
       ),
     );
-    logger.i('Firebase initialized successfully.'); // Konfirmasi inisialisasi berhasil
   } catch (e) {
     // Penanganan kesalahan jika Firebase gagal diinisialisasi
-    logger.e('Error initializing Firebase: $e'); // Log error
+    print('Error initializing Firebase: $e');
   }
 
-  runApp(const MyApp()); // Jalankan aplikasi utama
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -35,12 +30,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Microlearning',
+      title: 'Login',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 40, 121, 128)),
         useMaterial3: true,
       ),
-      home: const LoginForm(), // Ganti dengan halaman utama aplikasi Anda
+      home: const LauncherPage(),
       debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
     );
   }

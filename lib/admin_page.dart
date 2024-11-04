@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'kelolapengajar.dart';
+import 'package:microlearning/profile_admin.dart';
 import 'kelola_pengguna.dart';
-import 'quiz_page.dart';   
-import 'profile_page.dart'; 
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -23,7 +23,7 @@ class _AdminPageState extends State<AdminPage> {
   static const List<Widget> _pages = <Widget>[
     HomeContent(), // Beranda Home
     KelolaPengguna(),  // Halaman Kelola Pengguna
-    QuizPage(),    // Halaman Kelola Pengajar
+    KelolaPengajar(),    // Halaman Kelola Pengajar
   ];
 
   @override
@@ -66,7 +66,7 @@ class _AdminPageState extends State<AdminPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ProfilePage(),
+                            builder: (context) => const ProfileAdmin(),
                           ),
                         );
                       },
@@ -121,7 +121,7 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  List<bool> _isHovered = List.generate(5, (_) => false);
+  final List<bool> _isHovered = List.generate(5, (_) => false);
 
   // Daftar gambar untuk setiap kartu
   final List<String> _images = [

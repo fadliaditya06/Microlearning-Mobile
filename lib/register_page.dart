@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login_page.dart';
-import 'package:google_fonts/google_fonts.dart'; 
+import 'kelola_pengguna.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -24,9 +24,10 @@ class RegisterState extends State<RegisterPage> {
   String _selectedGender = 'Male'; // Pilihan gender default
 
   bool _isObscure = true;
-
+  var kelasOptions = ['10', '11', '12']; // Opsi kelas
   var options = ['Student', 'Teacher', 'Admin'];
-  String role = "Student"; // Role default
+  String role = "Student";
+  String? selectedKelas;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,7 @@ class RegisterState extends State<RegisterPage> {
             ),
             child: Center(
               child: Text(
-                'Tambah Pengguna', 
+                'Tambah Pengguna',
                 style: GoogleFonts.poppins(
                   fontSize: 32,
                 ),
@@ -64,7 +65,7 @@ class RegisterState extends State<RegisterPage> {
                     // Dropdown untuk memilih role (Student, Teacher, Admin)
                     Text(
                       'Peran',
-                      style: GoogleFonts.poppins(), 
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     DropdownButtonFormField<String>(
@@ -79,7 +80,7 @@ class RegisterState extends State<RegisterPage> {
                           value: value,
                           child: Text(
                             value,
-                            style: GoogleFonts.poppins(), 
+                            style: GoogleFonts.poppins(),
                           ),
                         );
                       }).toList(),
@@ -88,14 +89,6 @@ class RegisterState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -103,7 +96,7 @@ class RegisterState extends State<RegisterPage> {
                     // Input email
                     Text(
                       'Email',
-                      style: GoogleFonts.poppins(), 
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -113,16 +106,8 @@ class RegisterState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
                         labelText: 'Input Email',
-                        labelStyle: GoogleFonts.poppins(), 
+                        labelStyle: GoogleFonts.poppins(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -130,13 +115,12 @@ class RegisterState extends State<RegisterPage> {
                         }
                         return null;
                       },
-                      
                     ),
                     const SizedBox(height: 20),
                     // Input nama
                     Text(
                       'Nama',
-                      style: GoogleFonts.poppins(), 
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -146,16 +130,8 @@ class RegisterState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
                         labelText: 'Input Nama',
-                        labelStyle: GoogleFonts.poppins(), 
+                        labelStyle: GoogleFonts.poppins(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -168,27 +144,19 @@ class RegisterState extends State<RegisterPage> {
 
                     // Input NISN/NIP berdasarkan role yang dipilih
                     Text(
-                      'NISN/NIP',
-                      style: GoogleFonts.poppins(), 
+                      role == 'Student' ? 'NISN' : 'NIP',
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: roleIdController,
-                     decoration: InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
                         labelText: role == 'Student' ? 'Input NISN' : 'Input NIP',
-                        labelStyle: GoogleFonts.poppins(), // Font Poppins
+                        labelStyle: GoogleFonts.poppins(),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -197,22 +165,59 @@ class RegisterState extends State<RegisterPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20), 
+                    const SizedBox(height: 20),
+
+                    // Pilihan kelas hanya untuk role Student
+                    if (role == 'Student')
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Kelas',
+                            style: GoogleFonts.poppins(),
+                          ),
+                          const SizedBox(height: 5),
+                          DropdownButtonFormField<String>(
+                            value: selectedKelas,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedKelas = newValue;
+                              });
+                            },
+                            items: kelasOptions.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            decoration: const InputDecoration(
+                              labelText: 'Pilih Kelas',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Silakan pilih kelas Anda';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
 
                     // Pilihan Gender dengan RadioListTile
                     Text(
                       'Jenis Kelamin',
-                      style: GoogleFonts.poppins(), 
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     Row(
                       children: [
                         Expanded(
                           child: RadioListTile<String>(
-                            contentPadding: const EdgeInsets.only(left: -10), 
-                            title: Text('Laki-laki', style: GoogleFonts.poppins()), 
+                            title: Text('Laki-laki', style: GoogleFonts.poppins()),
                             value: 'Male',
-                            activeColor: Colors.black, 
+                            activeColor: Colors.black,
                             groupValue: _selectedGender,
                             onChanged: (String? value) {
                               setState(() {
@@ -223,10 +228,9 @@ class RegisterState extends State<RegisterPage> {
                         ),
                         Expanded(
                           child: RadioListTile<String>(
-                            contentPadding: const EdgeInsets.only(left: -10), 
-                            title: Text('Perempuan', style: GoogleFonts.poppins()), 
+                            title: Text('Perempuan', style: GoogleFonts.poppins()),
                             value: 'Female',
-                            activeColor: Colors.black, 
+                            activeColor: Colors.black,
                             groupValue: _selectedGender,
                             onChanged: (String? value) {
                               setState(() {
@@ -237,12 +241,12 @@ class RegisterState extends State<RegisterPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20), 
+                    const SizedBox(height: 20),
 
                     // Input password
                     Text(
                       'Password',
-                      style: GoogleFonts.poppins(), 
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -253,16 +257,8 @@ class RegisterState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
                         labelText: 'Input Password',
-                        labelStyle: GoogleFonts.poppins(), 
+                        labelStyle: GoogleFonts.poppins(),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isObscure ? Icons.visibility : Icons.visibility_off,
@@ -281,31 +277,23 @@ class RegisterState extends State<RegisterPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20), 
+                    const SizedBox(height: 20),
                     // Input konfirmasi password
                     Text(
                       'Konfirmasi Password',
-                      style: GoogleFonts.poppins(), 
+                      style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: confirmPassController,
                       obscureText: _isObscure,
-                     decoration: InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
-                        ),
                         labelText: 'Input Konfirmasi Password',
-                        labelStyle: GoogleFonts.poppins(), 
+                        labelStyle: GoogleFonts.poppins(),
                       ),
                       validator: (value) {
                         if (value != passwordController.text) {
@@ -314,36 +302,29 @@ class RegisterState extends State<RegisterPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 20), 
+                    const SizedBox(height: 20),
 
                     SizedBox(
                       width: double.infinity,
                       height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                         ),
-                      onPressed: () async {
-                        await signUp(emailController.text, passwordController.text, role);
-                      },
-                      child: Text(
-                        "Simpan",
-                        style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-                    if (showProgress) 
-                    const SizedBox(
-                      height: 50, 
-                      child: Center(
-                        child: CircularProgressIndicator(),
+                        onPressed: () async {
+                          await signUp(emailController.text, passwordController.text, role);
+                        },
+                        child: Text(
+                          "Simpan",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -355,54 +336,36 @@ class RegisterState extends State<RegisterPage> {
   }
 
   Future<void> signUp(String email, String password, String role) async {
-    setState(() {
-      showProgress = true; // Tampilkan indikator loading
-    });
-
     if (_formKey.currentState!.validate()) {
       try {
-        // Buat pengguna dengan email dan password
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
 
-        // Simpan data pengguna ke Firestore
-        await postDetailsToFirestore(userCredential.user!.uid); // Panggil metode untuk menyimpan data pengguna
-
-        // Navigasi ke halaman login
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
-      } on FirebaseAuthException catch (e) {
-        // Tangani kesalahan di sini
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Registrasi gagal')),
-        );
-      } finally {
-        setState(() {
-          showProgress = false; // Sembunyikan indikator loading
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+          'email': email,
+          'name': nameController.text,
+          'role': role,
+          'password' : password,
+          'gender': _selectedGender,
+           if (role == 'Student') 'nisn': roleIdController.text, // Menyimpan NISN jika Student
+          if (role == 'Admin' || role == 'Teacher') 'nip': roleIdController.text, // Menyimpan NIP jika Admin atau Teacher
+          if (role == 'Student') 'kelas': selectedKelas, // Hanya untuk siswa
         });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Akun berhasil dibuat')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const KelolaPengguna()),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal mendaftar, periksa kembali data Anda')),
+        );
       }
-    } else {
-      setState(() {
-        showProgress = false; // Sembunyikan indikator loading jika form tidak valid
-      });
     }
-  }
-
-  Future<void> postDetailsToFirestore(String uid) async {
-    CollectionReference ref = FirebaseFirestore.instance.collection('users');
-
-    // Simpan data pengguna
-    await ref.doc(uid).set({
-      'name': nameController.text, // Simpan nama
-      'email': emailController.text,
-      'password': passwordController.text, // Simpan email
-      'role': role, // Simpan role
-      'gender': _selectedGender, // Simpan gender
-      if (role == 'Student') 'nisn': roleIdController.text, // Simpan NISN jika role adalah Student
-      if (role == 'Teacher' || role == 'Admin') 'nip': roleIdController.text, // Simpan NIP jika role adalah Teacher/Admin
-    });
   }
 }
