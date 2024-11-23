@@ -75,10 +75,9 @@ class TambahPengajarState extends State<TambahPengajar> {
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back,
                         color: Colors.black, size: 25),
@@ -87,17 +86,21 @@ class TambahPengajarState extends State<TambahPengajar> {
                     },
                   ),
                 ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 70.0),
-                  child: Text(
-                    'Tambah Pengajar',
-                    style: GoogleFonts.poppins(fontSize: 25),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Text(
+                      'Tambah Pengajar',
+                      style: GoogleFonts.poppins(fontSize: 25),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
+
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -136,13 +139,13 @@ class TambahPengajarState extends State<TambahPengajar> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.blue, width: 1),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.blue, width: 1),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 1),
                           ),
                         ),
                         value: selectedTeacher,
@@ -171,15 +174,15 @@ class TambahPengajarState extends State<TambahPengajar> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                        focusedBorder: OutlineInputBorder(
+                          focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.blue, width: 1),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.blue, width: 1),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 1),
                           ),
                         ),
                         value: selectedSubject,
@@ -208,15 +211,15 @@ class TambahPengajarState extends State<TambahPengajar> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                        focusedBorder: OutlineInputBorder(
+                          focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.blue, width: 1),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 1),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
-                                color: Colors.blue, width: 1),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 1),
                           ),
                         ),
                         value: selectedKelas,
@@ -236,27 +239,28 @@ class TambahPengajarState extends State<TambahPengajar> {
                       const SizedBox(height: 40),
                       // Tombol Simpan
                       SizedBox(
-                      width: double.infinity,
-                      height: 70,
-                      child: ElevatedButton(
-                        onPressed: simpanData,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20), // Atur radius sudut di sini
+                        width: double.infinity,
+                        height: 70,
+                        child: ElevatedButton(
+                          onPressed: simpanData,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20), // Atur radius sudut di sini
                             ),
                           ),
-                            child: Text(
-                              "Simpan",
-                              style: GoogleFonts.poppins(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                ),
+                          child: Text(
+                            "Simpan",
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
                         ),
-                    ),
+                      ),
                     ],
                   );
                 },

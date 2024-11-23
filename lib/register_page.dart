@@ -45,10 +45,9 @@ class RegisterState extends State<RegisterPage> {
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back,
                         color: Colors.black, size: 25),
@@ -57,12 +56,15 @@ class RegisterState extends State<RegisterPage> {
                     },
                   ),
                 ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(right: 60.0),
-                  child: Text(
-                    'Tambah Pengguna',
-                    style: GoogleFonts.poppins(fontSize: 25),
+                const SizedBox(width: 10),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Text(
+                      'Tambah Pengguna',
+                      style: GoogleFonts.poppins(fontSize: 25),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ],

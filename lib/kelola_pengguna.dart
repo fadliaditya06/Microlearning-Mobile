@@ -144,7 +144,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                          builder: (context) => const RegisterPage()));
+                              builder: (context) => const RegisterPage()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,

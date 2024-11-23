@@ -22,7 +22,8 @@ class KelolaPengajarState extends State<KelolaPengajar> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Konfirmasi Hapus'),
-          content: const Text('Apakah Anda yakin ingin menghapus data pengajar ini?'),
+          content: const Text(
+              'Apakah Anda yakin ingin menghapus data pengajar ini?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -100,7 +101,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
-                 mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
@@ -227,7 +228,8 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                           DataCell(Row(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () {
                                   var dataPengajar = {
                                     'id': doc.id,
@@ -238,13 +240,15 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => EditPengajar(data: dataPengajar),
+                                      builder: (context) =>
+                                          EditPengajar(data: dataPengajar),
                                     ),
                                   );
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   _showDeleteConfirmationDialog(doc.id);
                                 },
