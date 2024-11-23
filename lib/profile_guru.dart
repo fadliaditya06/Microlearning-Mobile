@@ -12,7 +12,7 @@ class UserModel {
   final String? id;
   final String name;
   final String email;
-  
+
   final String gender;
   final String nip;
   final String password;
@@ -37,7 +37,8 @@ class UserModel {
     };
   }
 
-  factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory UserModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return UserModel(
       id: document.id,
@@ -149,7 +150,10 @@ class ProfileGuruState extends State<ProfileGuru> {
 
     if (newImageUrl != null) {
       try {
-        await FirebaseFirestore.instance.collection('users').doc(currentUserId).set(
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUserId)
+            .set(
           {
             'profile_image': newImageUrl,
           },
@@ -225,7 +229,8 @@ class ProfileGuruState extends State<ProfileGuru> {
               if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Gagal memuat gambar profil. Pastikan gambar tersedia dan formatnya valid.'),
+                  content: Text(
+                      'Gagal memuat gambar profil. Pastikan gambar tersedia dan formatnya valid.'),
                 ),
               );
             },
@@ -235,11 +240,11 @@ class ProfileGuruState extends State<ProfileGuru> {
             right: 0,
             child: CircleAvatar(
               radius: 20,
-              backgroundColor: Colors.white,
+              backgroundColor: Color(0xFFFFFD55),
               child: Icon(
                 Icons.edit,
-                size: 18,
-                color: Colors.blue,
+                size: 24,
+                color: Colors.black,
               ),
             ),
           ),
@@ -266,7 +271,8 @@ class ProfileGuruState extends State<ProfileGuru> {
     );
   }
 
-  Widget _buildUserInfoCard(String title, String value, {bool isPassword = false}) {
+  Widget _buildUserInfoCard(String title, String value,
+      {bool isPassword = false}) {
     return GestureDetector(
       onTap: () {
         if (isPassword) {
@@ -289,39 +295,45 @@ class ProfileGuruState extends State<ProfileGuru> {
               ),
             ],
           ),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(10),
+          width: 400, // Mengisi lebar layar tanpa masalah
+          height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               Expanded(
-                child: Stack(
-                  alignment: Alignment.bottomRight,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isPassword ? '••••••' : value,
-                      style: const TextStyle(fontSize: 16),
+                      title,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                    if (isPassword)
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: GestureDetector(
-                          onTap: () {
-                            showChangePasswordModal();
-                          },
-                          child: const Icon(Icons.edit, size: 18, color: Colors.blue),
-                        ),
-                      ),
+                    const SizedBox(
+                        height: 15), // Menambahkan jarak antara title dan value
+                    Text(
+                      isPassword ? '••••••' : value,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   ],
                 ),
               ),
+              if (isPassword)
+                GestureDetector(
+                  onTap: () {
+                    showChangePasswordModal();
+                  },
+                  child: const CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Color(0xFFFFFD55),
+                    child: Icon(
+                      Icons.edit,
+                      size: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -329,57 +341,59 @@ class ProfileGuruState extends State<ProfileGuru> {
     );
   }
 
- Future<void> showChangePasswordModal() async {
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  Future<void> showChangePasswordModal() async {
+    final TextEditingController newPasswordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
 
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Ubah Password'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: [
-              TextField(
-                controller: newPasswordController,
-                decoration: const InputDecoration(labelText: 'Password Baru'),
-                obscureText: true,
-              ),
-              TextField(
-                controller: confirmPasswordController,
-                decoration: const InputDecoration(labelText: 'Konfirmasi Password'),
-                obscureText: true,
-              ),
-            ],
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Ubah Password'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: [
+                TextField(
+                  controller: newPasswordController,
+                  decoration: const InputDecoration(labelText: 'Password Baru'),
+                  obscureText: true,
+                ),
+                TextField(
+                  controller: confirmPasswordController,
+                  decoration:
+                      const InputDecoration(labelText: 'Konfirmasi Password'),
+                  obscureText: true,
+                ),
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (newPasswordController.text == confirmPasswordController.text) {
-                _updatePassword(newPasswordController.text);
+          actions: [
+            TextButton(
+              onPressed: () {
                 Navigator.pop(context);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Password tidak cocok')),
-                );
-              }
-            },
-            child: const Text('Simpan'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (newPasswordController.text ==
+                    confirmPasswordController.text) {
+                  _updatePassword(newPasswordController.text);
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Password tidak cocok')),
+                  );
+                }
+              },
+              child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _updatePassword(String newPassword) async {
     try {
@@ -428,26 +442,79 @@ class ProfileGuruState extends State<ProfileGuru> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profil')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    _buildAvatar(),
-                    const SizedBox(height: 20),
-                    _buildUserInfo(),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: showLogoutConfirmation,
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                ),
+      body: Column(
+        children: <Widget>[
+          // Header Setengah Lingkaran
+          Container(
+            height: 150,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFFFD55),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(150),
+                bottomRight: Radius.circular(150),
               ),
             ),
+            child: Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.start, // Ikon dan teks sejajar kiri
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.black, size: 25),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                const Spacer(),
+                const Padding(
+                  padding: EdgeInsets.only(right: 165.0),
+                  child: Text(
+                    'Profil',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Konten Utama di bawah header
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  // Konten yang di-scroll
+                  const SizedBox(height: 20),
+                  _buildAvatar(),
+                  const SizedBox(height: 20),
+                  _buildUserInfo(),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: showLogoutConfirmation,
+                    icon: const Icon(
+                      Icons.exit_to_app,
+                      color: Colors.black,
+                    ),
+                    label: const Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import './launcher.dart';
-
+import 'package:microlearning/login_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
 
+  // Inisialisasi Firebase
   try {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -16,12 +18,14 @@ Future<void> main() async {
         storageBucket: "microlearning-ea3cc.appspot.com",
       ),
     );
+    print(
+        'Firebase initialized successfully.'); // Konfirmasi inisialisasi berhasil
   } catch (e) {
     // Penanganan kesalahan jika Firebase gagal diinisialisasi
     print('Error initializing Firebase: $e');
   }
 
-  runApp(const MyApp());
+  runApp(const MyApp()); // Jalankan aplikasi utama
 }
 
 class MyApp extends StatelessWidget {
@@ -30,13 +34,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'Microlearning',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 40, 121, 128)),
-        useMaterial3: true,
-      ),
-      home: const LauncherPage(),
-      debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
-    );
-  }
-}
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 40, 121, 128)),
+            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+            useMaterial3: true,
+          ),
+          home: const LoginForm(), // Ganti dengan halaman utama aplikasi Anda
+          debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
+        );
+      }  
+    }

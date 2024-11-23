@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
-import 'register_page.dart'; // Import register page tetap ada
 import 'admin_page.dart';
 import 'student_page.dart';
 import 'teacher_page.dart';
@@ -97,7 +96,8 @@ class LoginFormState extends State<LoginForm> {
             // Form Input
             Padding(
               padding: const EdgeInsets.all(30.0),
-              child: Form( // Tambahkan Form untuk validator
+              child: Form(
+                // Tambahkan Form untuk validator
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
@@ -112,18 +112,22 @@ class LoginFormState extends State<LoginForm> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 1),
                         ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Email tidak boleh kosong";
                         }
-                        if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$").hasMatch(value)) {
+                        if (!RegExp(
+                                r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$")
+                            .hasMatch(value)) {
                           return "Masukkan email yang valid";
                         }
                         return null;
@@ -143,15 +147,19 @@ class LoginFormState extends State<LoginForm> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue, width: 1),
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 1),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isObscure ? Icons.visibility : Icons.visibility_off,
+                            _isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -174,18 +182,23 @@ class LoginFormState extends State<LoginForm> {
                     // Tombol Login
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 70,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                20), // Atur radius sudut di sini
+                          ),
                         ),
                         onPressed: () async {
                           // Set loading jadi true saat login mulai diproses
                           setState(() {
                             _isLoading = true;
                           });
-                          await signIn(emailController.text, passwordController.text);
+                          await signIn(
+                              emailController.text, passwordController.text);
                           // Set loading jadi false setelah login selesai
                           setState(() {
                             _isLoading = false;
@@ -204,29 +217,6 @@ class LoginFormState extends State<LoginForm> {
                     const SizedBox(height: 20),
                     // Menampilkan CircularProgressIndicator saat loading
                     if (_isLoading) const CircularProgressIndicator(),
-                    // Link ke halaman Register
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Belum punya akun?"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const RegisterPage()),
-                            );
-                          },
-                          child: const Text(
-                            "Daftar",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -269,7 +259,8 @@ class LoginFormState extends State<LoginForm> {
 
         // Menggunakan userCredential untuk mengambil informasi pengguna
         User? user = userCredential.user;
-        logger.i('User signed in: ${user?.email}'); // Menyimpan informasi pengguna ke log
+        logger.i(
+            'User signed in: ${user?.email}'); // Menyimpan informasi pengguna ke log
 
         // Setelah berhasil login, arahkan pengguna berdasarkan peran
         await route(context);
@@ -304,21 +295,24 @@ class LoginFormState extends State<LoginForm> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const TeacherPage(), // Arahkan ke halaman Teacher
+                builder: (context) =>
+                    const TeacherPage(), // Arahkan ke halaman Teacher
               ),
             );
           } else if (userRole == "Student") {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const StudentPage(), // Arahkan ke halaman Student
+                builder: (context) =>
+                    const StudentPage(), // Arahkan ke halaman Student
               ),
             );
           } else if (userRole == "Admin") {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const AdminPage(), // Arahkan ke halaman Admin
+                builder: (context) =>
+                    const AdminPage(), // Arahkan ke halaman Admin
               ),
             );
           }

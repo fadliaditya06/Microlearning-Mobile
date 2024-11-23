@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'kelolapengajar.dart';
 import 'package:microlearning/profile_admin.dart';
 import 'kelola_pengguna.dart';
+import 'kelola_pengajar.dart';   
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
 
   @override
-  State<AdminPage> createState() => _AdminPageState();
+  AdminPageState createState() => AdminPageState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class AdminPageState extends State<AdminPage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -21,9 +21,9 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeContent(), // Beranda Home
-    KelolaPengguna(),  // Halaman Kelola Pengguna
-    KelolaPengajar(),    // Halaman Kelola Pengajar
+    HomeContent(), // Beranda 
+    KelolaPengguna(), // Halaman Kelola Pengguna
+    KelolaPengajar(), // Halaman Kelola Pengajar
   ];
 
   @override
@@ -86,28 +86,52 @@ class _AdminPageState extends State<AdminPage> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
+      bottomNavigationBar: Container(
+        color: const Color(0xFFFFFD55),
+        padding: const EdgeInsets.symmetric(vertical: 10.0), // Atur padding horizontal
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildBottomNavItem(Icons.home, 'Beranda', 0),
+            _buildBottomNavItem(Icons.person, 'Kelola Pengguna', 1),
+            _buildBottomNavItem(Icons.edit_square, 'Kelola Pengajar', 2),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavItem(IconData icon, String label, int index) {
+    bool isSelected = _selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Highlight pada latar belakang ikon
+          Container(
+            width: 70, 
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.white : Colors.transparent,
+              borderRadius: BorderRadius.circular(40), 
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 5.0), 
+            child: Icon(
+              icon,
+              color: Colors.black,
+              size: 28, 
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Kelola Pengguna',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.edit_square),
-            label: 'Kelola Pengajar',
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: isSelected ? Colors.black : Colors.black54,
+            ),
           ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        backgroundColor: const Color(0xFFFFFD55),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black,
-        selectedLabelStyle: GoogleFonts.poppins(),  
-        unselectedLabelStyle: GoogleFonts.poppins(), 
       ),
     );
   }
@@ -121,7 +145,7 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  final List<bool> _isHovered = List.generate(5, (_) => false);
+  List<bool> _isHovered = List.generate(5, (_) => false);
 
   // Daftar gambar untuk setiap kartu
   final List<String> _images = [
@@ -182,7 +206,7 @@ class _HomeContentState extends State<HomeContent> {
           const SizedBox(height: 20),
           Container(
             color: Colors.blue,
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -237,7 +261,7 @@ class _HomeContentState extends State<HomeContent> {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -245,14 +269,17 @@ class _HomeContentState extends State<HomeContent> {
                   radius: 40,
                   backgroundImage: AssetImage(image),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 8),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),

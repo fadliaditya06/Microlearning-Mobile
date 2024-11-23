@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart'; 
-import 'profile_page.dart'; 
+import 'profile_siswa.dart'; 
 
 class UserRepository extends GetxController {
   final Logger logger = Logger(); 

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:microlearning/daftar_siswa.dart';
+import 'package:microlearning/kelola_konten.dart';
 import 'package:microlearning/materi_page.dart';
-import 'package:microlearning/quiz_page.dart';
-import 'kelola_pengguna.dart'; 
 import 'profile_guru.dart';
 
 class TeacherPage extends StatefulWidget {
   const TeacherPage({super.key});
 
   @override
-  State<TeacherPage> createState() => _TeacherPageState();
+  TeacherPageState createState() => TeacherPageState();
 }
 
-class _TeacherPageState extends State<TeacherPage> {
+class TeacherPageState extends State<TeacherPage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -22,10 +22,10 @@ class _TeacherPageState extends State<TeacherPage> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeContent(), // Beranda Home
-    KelolaPengguna(),  // Halaman Kelola Pengguna
-    MateriPage(), // Halaman Kelola Materi
-    QuizPage(), // Halaman Kuiz
+    HomeContent(),
+    KelolaKontenPage(),
+    MateriPage(),
+    DaftarSiswaPage(),
   ];
 
   @override
@@ -33,7 +33,6 @@ class _TeacherPageState extends State<TeacherPage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          // Header setengah lingkaran 
           if (_selectedIndex == 0)
             Container(
               height: 150,
@@ -82,42 +81,59 @@ class _TeacherPageState extends State<TeacherPage> {
                 ],
               ),
             ),
-          // Konten Utama
           Expanded(
             child: _pages[_selectedIndex],
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-            backgroundColor: Color(0xFFFFFD55),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.file_open),
-            label: 'Kelola Konten', 
-            backgroundColor: Color(0xFFFFFD55),
+      bottomNavigationBar: Container(
+        color: const Color(0xFFFFFD55),
+        padding: const EdgeInsets.symmetric(
+            vertical: 10.0), // Atur padding horizontal
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildBottomNavItem(Icons.home, 'Beranda', 0),
+            _buildBottomNavItem(Icons.file_open, 'Kelola Konten', 1),
+            _buildBottomNavItem(Icons.menu_book, 'Materi', 2),
+            _buildBottomNavItem(Icons.group, 'Daftar Siswa', 3),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavItem(IconData icon, String label, int index) {
+    bool isSelected = _selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Highlight pada latar belakang ikon
+          Container(
+            width: 70,
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.white : Colors.transparent,
+              borderRadius: BorderRadius.circular(40),
             ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Materi',
-            backgroundColor: Color(0xFFFFFD55),
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Icon(
+              icon,
+              color: Colors.black,
+              size: 28,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Daftar Siswa',
-            backgroundColor: Color(0xFFFFFD55),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: isSelected ? Colors.black : Colors.black54,
+            ),
           ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black,
-        selectedLabelStyle: GoogleFonts.poppins(),  
-        unselectedLabelStyle: GoogleFonts.poppins(), 
-        showUnselectedLabels: true,
       ),
     );
   }
@@ -131,9 +147,8 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  List<bool> isHovered = List.generate(5, (index) => false);
+  List<bool> _isHovered = List.generate(5, (_) => false);
 
-  // Daftar gambar untuk setiap kartu
   final List<String> _images = [
     'assets/images/TPA_ua.png',
     'assets/images/Logo-TK.png',
@@ -149,10 +164,10 @@ class _HomeContentState extends State<HomeContent> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 20), 
+          const SizedBox(height: 20),
           const Center(
             child: CircleAvatar(
-              radius: 100, // Logo size
+              radius: 100,
               backgroundImage: AssetImage('assets/images/ASET-PPDB.png'),
             ),
           ),
@@ -179,7 +194,7 @@ class _HomeContentState extends State<HomeContent> {
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 16.0), // Menambahkan padding dari kiri
+              padding: const EdgeInsets.only(left: 16.0),
               child: Text(
                 "Jenjang Pendidikan",
                 style: GoogleFonts.poppins(
@@ -192,7 +207,7 @@ class _HomeContentState extends State<HomeContent> {
           const SizedBox(height: 20),
           Container(
             color: Colors.blue,
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -220,7 +235,7 @@ class _HomeContentState extends State<HomeContent> {
               },
             ),
           ),
-          const SizedBox(height: 50), // Jarak di bawah GridView
+          const SizedBox(height: 50),
         ],
       ),
     );
@@ -230,24 +245,24 @@ class _HomeContentState extends State<HomeContent> {
     return MouseRegion(
       onEnter: (_) {
         setState(() {
-          isHovered[index] = true;
+          _isHovered[index] = true;
         });
       },
       onExit: (_) {
         setState(() {
-          isHovered[index] = false;
+          _isHovered[index] = false;
         });
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        transform: Matrix4.translationValues(0, isHovered[index] ? -10 : 0, 0),
+        transform: Matrix4.translationValues(0, _isHovered[index] ? -10 : 0, 0),
         child: Card(
-          elevation: isHovered[index] ? 10 : 4,
+          elevation: _isHovered[index] ? 10 : 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -255,14 +270,17 @@ class _HomeContentState extends State<HomeContent> {
                   radius: 40,
                   backgroundImage: AssetImage(image),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 8),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),

@@ -1,38 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:microlearning/register_page.dart';
+import 'edit_pengajar.dart';
+import 'tambah_pengajar.dart';
 
-class KelolaPengguna extends StatefulWidget {
-  const KelolaPengguna({super.key});
+class KelolaPengajar extends StatefulWidget {
+  const KelolaPengajar({super.key});
 
   @override
-  KelolaPenggunaState createState() => KelolaPenggunaState();
+  State<KelolaPengajar> createState() => KelolaPengajarState();
 }
 
-class KelolaPenggunaState extends State<KelolaPengguna> {
-  final CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection('users');
+class KelolaPengajarState extends State<KelolaPengajar> {
+  final CollectionReference pengajarCollection =
+      FirebaseFirestore.instance.collection('pengajar');
 
+  // Fungsi untuk menampilkan modal konfirmasi
   void _showDeleteConfirmationDialog(String id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Konfirmasi Hapus'),
-          content:
-              const Text('Apakah Anda yakin ingin menghapus data user ini?'),
+          content: const Text('Apakah Anda yakin ingin menghapus data pengajar ini?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Tutup dialog
               },
               child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () {
-                _deleteUsers(id);
-                Navigator.of(context).pop();
+                _deletePengajar(id);
+                Navigator.of(context).pop(); // Tutup dialog setelah menghapus
               },
               child: const Text('Hapus'),
             ),
@@ -42,15 +43,16 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
     );
   }
 
-  Future<void> _deleteUsers(String id) async {
+  // Fungsi untuk menghapus data pengajar
+  Future<void> _deletePengajar(String id) async {
     try {
-      await usersCollection.doc(id).delete();
+      await pengajarCollection.doc(id).delete();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data user berhasil dihapus')),
+        const SnackBar(content: Text('Data pengajar berhasil dihapus')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menghapus data user')),
+        const SnackBar(content: Text('Gagal menghapus data pengajar')),
       );
     }
   }
@@ -61,6 +63,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            // Header Setengah Lingkaran
             Container(
               height: 150,
               decoration: const BoxDecoration(
@@ -72,7 +75,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               ),
               child: Center(
                 child: Text(
-                  'Kelola Pengguna',
+                  'Kelola Pengajar',
                   style: GoogleFonts.poppins(
                     fontSize: 25,
                   ),
@@ -85,7 +88,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Text(
-                  "Daftar Pengguna",
+                  "Daftar Pengajar",
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                   ),
@@ -93,58 +96,20 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               ),
             ),
             const SizedBox(height: 15),
+            // Tombol Tambah di sebelah kanan
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Aksi tombol Guru
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          'Guru',
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Aksi tombol Siswa
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          'Siswa',
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => const RegisterPage()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TambahPengajar(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -165,8 +130,9 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               ),
             ),
             const SizedBox(height: 15),
+            // Pengambilan data pengajar
             StreamBuilder<QuerySnapshot>(
-              stream: usersCollection.snapshots(),
+              stream: pengajarCollection.snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Center(child: Text("Terjadi kesalahan"));
@@ -176,15 +142,15 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(child: Text("Tidak ada data pengguna"));
+                  return const Center(child: Text("Tidak ada data pengajar"));
                 }
 
                 final data = snapshot.data!.docs;
 
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: DataTable(
                       headingRowColor: WidgetStateProperty.all(Colors.blue),
                       columns: [
@@ -199,7 +165,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                         ),
                         DataColumn(
                           label: Text(
-                            'Peran',
+                            'Nama Guru',
                             style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -208,7 +174,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                         ),
                         DataColumn(
                           label: Text(
-                            'Email',
+                            'Judul Mapel',
                             style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -217,25 +183,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                         ),
                         DataColumn(
                           label: Text(
-                            'Nama',
-                            style: GoogleFonts.poppins(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'NISN/NIP',
-                            style: GoogleFonts.poppins(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Password',
+                            'Kelas',
                             style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -252,49 +200,51 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                           ),
                         ),
                       ],
-                      rows: data.map((doc) {
-                        final docData = doc.data() as Map<String, dynamic>;
-                        final nipNisn = (docData['role'] == 'Teacher' ||
-                                docData['role'] == 'Admin')
-                            ? (docData.containsKey('nip') &&
-                                    docData['nip'] != null
-                                ? docData['nip']
-                                : 'Tidak ada')
-                            : (docData.containsKey('nisn') &&
-                                    docData['nisn'] != null
-                                ? docData['nisn']
-                                : 'Tidak ada');
+                      rows: data.asMap().entries.map((entry) {
+                        int index = entry.key + 1;
+                        var doc = entry.value;
+                        var namaGuru = doc['namaGuru'];
+                        var mataPelajaran = doc['mataPelajaran'];
+                        var kelas = doc['kelas'];
 
                         return DataRow(cells: [
                           DataCell(Text(
-                            (data.indexOf(doc) + 1).toString(),
+                            index.toString(),
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(
-                            docData['role'] ?? 'Tidak ada',
+                            namaGuru,
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(
-                            docData['email'] ?? 'Tidak ada',
+                            mataPelajaran,
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(
-                            docData['name'] ?? 'Tidak ada',
-                            style: GoogleFonts.poppins(),
-                          )),
-                          DataCell(Text(
-                            nipNisn,
-                            style: GoogleFonts.poppins(),
-                          )),
-                          DataCell(Text(
-                            docData['password'] ?? 'Tidak ada',
+                            kelas,
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Row(
                             children: [
                               IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  var dataPengajar = {
+                                    'id': doc.id,
+                                    'namaGuru': doc['namaGuru'],
+                                    'mataPelajaran': doc['mataPelajaran'],
+                                    'kelas': doc['kelas'],
+                                  };
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditPengajar(data: dataPengajar),
+                                    ),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   _showDeleteConfirmationDialog(doc.id);
                                 },
