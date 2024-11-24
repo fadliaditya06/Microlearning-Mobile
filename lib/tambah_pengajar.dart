@@ -89,7 +89,7 @@ class TambahPengajarState extends State<TambahPengajar> {
                 const SizedBox(width: 10),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
+                    padding: const EdgeInsets.only(left: 10.0),
                     child: Text(
                       'Tambah Pengajar',
                       style: GoogleFonts.poppins(fontSize: 25),

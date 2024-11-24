@@ -30,7 +30,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
     super.dispose();
   }
 
-  // Function to manage search input changes
+  // Fungsi untuk mengelola perubahan teks pada search box
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
@@ -40,16 +40,22 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
     });
   }
 
-  // Fungsi untuk mendapatkan stream dengan filter dinamis berdasarkan _searchText
+  // Stream untuk mengambil data siswa dari Firestore
   Stream<QuerySnapshot> _getUserStream() {
+    return userCollection.where('role', isEqualTo: 'Student').snapshots();
+  }
+
+  // Fungsi untuk memfilter hasil pencarian secara lokal
+  List<QueryDocumentSnapshot> _filterSearchResults(
+      List<QueryDocumentSnapshot> documents) {
     if (_searchText.isEmpty) {
-      return userCollection.where('role', isEqualTo: 'Student').snapshots();
+      return documents;
     } else {
-      return userCollection
-          .where('role', isEqualTo: 'Student')
-          .where('name', isGreaterThanOrEqualTo: _searchText)
-          .where('name', isLessThanOrEqualTo: '$_searchText\uf8ff')
-          .snapshots();
+      return documents.where((doc) {
+        var data = doc.data() as Map<String, dynamic>;
+        var name = data['name']?.toString().toLowerCase() ?? '';
+        return name.contains(_searchText);
+      }).toList();
     }
   }
 
@@ -72,7 +78,9 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
               child: Center(
                 child: Text(
                   'Daftar Siswa',
-                  style: GoogleFonts.poppins(fontSize: 25),
+                  style: GoogleFonts.poppins(
+                    fontSize: 25,
+                  ),
                 ),
               ),
             ),
@@ -109,7 +117,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
               ),
             ),
 
-            // StreamBuilder to fetch data based on search query
+            // StreamBuilder untuk pengambilan data siswa
             StreamBuilder<QuerySnapshot>(
               stream: _getUserStream(),
               builder: (context, snapshot) {
@@ -117,25 +125,27 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Tidak ada data siswa yang cocok.',
-                        style: GoogleFonts.poppins(fontSize: 18),
-                      ),
+                // Jika data kosong atau tidak ada hasil pencarian
+                if (!snapshot.hasData ||
+                    _filterSearchResults(snapshot.data!.docs).isEmpty) {
+                  return Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                    child: Text(
+                      'Tidak ada data siswa yang cocok.',
+                      style: GoogleFonts.poppins(fontSize: 17),
                     ),
                   );
                 }
 
+                // Filter data siswa berdasarkan pencarian
+                var filteredDocs = _filterSearchResults(snapshot.data!.docs);
+
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.docs.length,
+                  itemCount: filteredDocs.length,
                   itemBuilder: (context, index) {
-                    var data = snapshot.data!.docs[index].data()
-                        as Map<String, dynamic>;
+                    var data = filteredDocs[index].data() as Map<String, dynamic>;
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -148,7 +158,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
                             children: [
-                              // Profile image
+                              // Foto Profil
                               CircleAvatar(
                                 radius: 30,
                                 backgroundImage:
@@ -161,10 +171,9 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                               ),
                               const SizedBox(width: 12),
 
-                              // Student information
+                              // Informasi Nama dan NISN 
                               SizedBox(
-                                width:
-                                    100, // fixed width to avoid text overflow
+                                width: 100, 
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -191,20 +200,20 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
 
                               const Spacer(),
 
-                              // Divider line
+                              // Garis
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 child: Container(
-                                  width: 1, // Divider thickness
-                                  height: 40, // Divider height
+                                  width: 1, 
+                                  height: 40, 
                                   color: Colors.black,
                                 ),
                               ),
 
                               const SizedBox(width: 10),
 
-                              // Additional information
+                              // Informasi Jenis Kelamin dan Kelas
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
