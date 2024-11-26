@@ -13,6 +13,8 @@ class KelolaPengguna extends StatefulWidget {
 class KelolaPenggunaState extends State<KelolaPengguna> {
   final CollectionReference usersCollection =
       FirebaseFirestore.instance.collection('users');
+      String? _selectedRole;
+
 
   void _showDeleteConfirmationDialog(String id) {
     showDialog(
@@ -93,6 +95,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               ),
             ),
             const SizedBox(height: 15),
+            // Tombol Filter dan Tambah
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -102,7 +105,9 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          // Aksi tombol Guru
+                          setState(() {
+                            _selectedRole = 'Teacher';
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
@@ -121,7 +126,9 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                       const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
-                          // Aksi tombol Siswa
+                          setState(() {
+                            _selectedRole = 'Student';
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
@@ -165,8 +172,15 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               ),
             ),
             const SizedBox(height: 15),
+
+            // Menampilkan data pengguna berdasarkan filter peran pengguna
             StreamBuilder<QuerySnapshot>(
-              stream: usersCollection.snapshots(),
+              stream: (_selectedRole != null)
+                  ? usersCollection
+                      .where('role', isEqualTo: _selectedRole)
+                      .orderBy('name', descending: false)
+                      .snapshots()
+                  : usersCollection.orderBy('name', descending: false).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Center(child: Text("Terjadi kesalahan"));
