@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:logger/logger.dart';
 import 'admin_page.dart';
 import 'student_page.dart';
 import 'teacher_page.dart';
 
-// Halaman Login
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -29,8 +29,11 @@ class LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final Logger logger = Logger(); // Inisialisasi logger
-  bool _isLoading = false; // Status loading
+  final Logger logger = Logger();
+  bool _isLoading = false;
+  String? selectedRole; // Menyimpan peran yang dipilih
+  List<String> availableRoles = []; // Daftar peran yang dapat dipilih
+  String? correctRole; // Peran yang benar berdasarkan email
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,6 @@ class LoginFormState extends State<LoginForm> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            // Header Setengah Lingkaran
             Container(
               height: 150,
               decoration: const BoxDecoration(
@@ -69,8 +71,6 @@ class LoginFormState extends State<LoginForm> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Foto Login
             Container(
               width: 500,
               height: 200,
@@ -81,8 +81,7 @@ class LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Jarak antara foto dan teks
-            // Tulisan "LOGIN"
+            const SizedBox(height: 20),
             const Text(
               "LOGIN",
               style: TextStyle(
@@ -91,16 +90,71 @@ class LoginFormState extends State<LoginForm> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20), // Jarak antara teks dan input form
-
-            // Form Input
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: Form(
-                // Tambahkan Form untuk validator
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
+                    // Dropdown untuk memilih peran
+                    DropdownButtonFormField<String>(
+                      value: selectedRole,
+                      hint: Text("Peran",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                          )),
+                      items: ['Student', 'Teacher', 'Admin'].map((role) {
+                        String displayValue =
+                            ''; // Menampilkan peran dalam bahasa indonesia
+                        switch (role) {
+                          case 'Student':
+                            displayValue = 'Siswa';
+                            break;
+                          case 'Teacher':
+                            displayValue = 'Guru';
+                            break;
+                          case 'Admin':
+                            displayValue = 'Admin';
+                            break;
+                          default:
+                            displayValue = role;
+                        }
+                        return DropdownMenuItem<String>(
+                          value: role,
+                          child: Text(displayValue,
+                              style: GoogleFonts.poppins(color: Colors.black)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRole = value; // Set peran yang dipilih
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.blue),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 1),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide:
+                              const BorderSide(color: Colors.blue, width: 1),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Peran harus dipilih";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
                     // Form Input Email
                     TextFormField(
                       controller: emailController,
@@ -179,7 +233,6 @@ class LoginFormState extends State<LoginForm> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Tombol Login
                     SizedBox(
                       width: double.infinity,
                       height: 70,
@@ -188,21 +241,25 @@ class LoginFormState extends State<LoginForm> {
                           backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                20), // Atur radius sudut di sini
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         onPressed: () async {
-                          // Set loading jadi true saat login mulai diproses
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await signIn(
-                              emailController.text, passwordController.text);
-                          // Set loading jadi false setelah login selesai
-                          setState(() {
-                            _isLoading = false;
-                          });
+                          if (_formKey.currentState!.validate()) {
+                            if (selectedRole == null || selectedRole!.isEmpty) {
+                              showErrorModal(context, 'Peran harus dipilih');
+                              return;
+                            }
+
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            await signIn(
+                                emailController.text, passwordController.text);
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
                         },
                         child: const Text(
                           "Login",
@@ -215,7 +272,6 @@ class LoginFormState extends State<LoginForm> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Menampilkan CircularProgressIndicator saat loading
                     if (_isLoading) const CircularProgressIndicator(),
                   ],
                 ),
@@ -227,99 +283,112 @@ class LoginFormState extends State<LoginForm> {
     );
   }
 
-  // Fungsi untuk menampilkan modal
+  // Fungsi untuk menandai login pengguna
+  Future<void> signIn(String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        // Ambil email dari database 
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .get();
+
+        // Mengecek email di database
+        if (snapshot.docs.isEmpty) {
+          // Jika email tidak ditemukan, tampilkan kesalahan
+          showErrorModal(context, 'Email dan password Anda salah');
+          return; 
+        }
+
+        // Mengambil email dari Firestore dan cocokkan dengan case-sensitive
+        String databaseEmail = snapshot.docs.first.get('email');
+
+        // Perbandingan case-sensitive
+        if (email == databaseEmail) {
+          try {
+            final UserCredential userCredential =
+                await auth.signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
+
+            if (userCredential.user != null) {
+              // Mengambil data pengguna dari Firestore
+              DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userCredential.user!.uid)
+                  .get();
+
+              if (userDoc.exists) {
+                // Ambil role pengguna dari Firestore
+                String userRole = userDoc['role'];
+
+                // Cek apakah role pengguna sesuai dengan yang dipilih
+                if (selectedRole == userRole) {
+                  navigateToRolePage(userRole, context);
+                } else {
+                  showErrorModal(context, 'Peran yang Anda pilih tidak sesuai');
+                }
+              } else {
+                showErrorModal(context, 'Data pengguna tidak ditemukan');
+              }
+            } else {
+              showErrorModal(context, 'Login gagal, silakan coba lagi');
+            }
+          } catch (e) {
+            // Menangani kesalahan login dengan email dan password yang salah
+            showErrorModal(context, 'Email dan password Anda salah');
+          }
+        } else {
+          // Jika email tidak cocok dengan yang ada di database
+          showErrorModal(context, 'Email dan password Anda salah');
+        }
+      } catch (e) {
+        // Menangani kesalahan umum lainnya
+        showErrorModal(context, 'Terjadi kesalahan, coba lagi');
+      }
+    }
+  }
+
+  void navigateToRolePage(String userRole, BuildContext context) {
+    if (userRole == 'Student') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const StudentPage()),
+      );
+    } else if (userRole == 'Teacher') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const TeacherPage()),
+      );
+    } else if (userRole == 'Admin') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminPage()),
+      );
+    } else {
+      showErrorModal(context, 'Peran yang tidak dikenal');
+    }
+  }
+
+// Fungsi untuk menampilkan modal
   void showErrorModal(BuildContext context, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Peringatan"),
+          title: const Text('Kesalahan'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: const Text("OK"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              child: const Text('OK'),
             ),
           ],
         );
       },
     );
-  }
-
-  // Fungsi untuk menandai login pengguna
-  Future<void> signIn(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        // Menggunakan userCredential untuk mengambil informasi pengguna
-        User? user = userCredential.user;
-        logger.i(
-            'User signed in: ${user?.email}'); // Menyimpan informasi pengguna ke log
-
-        // Setelah berhasil login, arahkan pengguna berdasarkan peran
-        await route(context);
-      } on FirebaseAuthException catch (e) {
-        setState(() {
-          _isLoading = false; // Set loading menjadi false saat error
-        });
-        if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-          showErrorModal(context, "Email dan password Anda salah.");
-        } else {
-          showErrorModal(context, "Email atau password Anda salah.");
-        }
-      }
-    }
-  }
-
-  // Fungsi route untuk mengarahkan sesuai peran pengguna
-  Future<void> route(BuildContext context) async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      try {
-        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
-
-        if (documentSnapshot.exists) {
-          var userRole = documentSnapshot.get('role');
-
-          if (userRole == "Teacher") {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    const TeacherPage(), // Arahkan ke halaman Teacher
-              ),
-            );
-          } else if (userRole == "Student") {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    const StudentPage(), // Arahkan ke halaman Student
-              ),
-            );
-          } else if (userRole == "Admin") {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    const AdminPage(), // Arahkan ke halaman Admin
-              ),
-            );
-          }
-        }
-      } catch (e) {
-        showErrorModal(context, "Terjadi kesalahan saat memuat data pengguna.");
-      }
-    }
   }
 }
