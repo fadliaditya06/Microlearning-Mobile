@@ -46,16 +46,14 @@ class EditKontenState extends State<EditKonten> {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: Text(
                       'Edit Konten Pelajaran',
-                      style: GoogleFonts.poppins(fontSize: 23),
-                      overflow: TextOverflow
-                          .ellipsis, // Teks terpotong jika terlalu panjang
+                      style: GoogleFonts.poppins(fontSize: 22),
+                      overflow: TextOverflow.ellipsis, // Teks terpotong jika terlalu panjang
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
           // Konten Form
           Expanded(
             child: Padding(
@@ -66,7 +64,7 @@ class EditKontenState extends State<EditKonten> {
                     // Input Judul Sub Bab
                     Text(
                       'Judul Sub Bab',
-                      style: GoogleFonts.poppins(),
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -93,7 +91,7 @@ class EditKontenState extends State<EditKonten> {
                     // Input Materi
                     Text(
                       'Materi',
-                      style: GoogleFonts.poppins(),
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -120,7 +118,7 @@ class EditKontenState extends State<EditKonten> {
                     // Input Video
                     Text(
                       'Video',
-                      style: GoogleFonts.poppins(),
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'kelas_page.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'kelas_page.dart';
 
 class MateriPage extends StatefulWidget {
   const MateriPage({super.key});
@@ -10,6 +11,12 @@ class MateriPage extends StatefulWidget {
 }
 
 class _MateriPageState extends State<MateriPage> {
+  final CollectionReference pengajarCollection =
+      FirebaseFirestore.instance.collection('pengajar');
+  
+  // Set untuk menyimpan mata pelajaran yang sudah ditampilkan
+  Set<String> displayedClasses = Set();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,13 +35,12 @@ class _MateriPageState extends State<MateriPage> {
             child: Row(
               children: [
                 const Spacer(),
-                // Memastikan teks berada di tengah
                 Padding(
-                  padding: const EdgeInsets.only(right: 2.0), 
+                  padding: const EdgeInsets.only(right: 2.0),
                   child: Text(
                     'Mata Pelajaran',
                     style: GoogleFonts.poppins(
-                      fontSize: 26, 
+                      fontSize: 26,
                       color: Colors.black,
                     ),
                   ),
@@ -43,45 +49,53 @@ class _MateriPageState extends State<MateriPage> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const KelasPage()),
-              );
-            },
-            child: _buildMateriBox("Matematika"),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const KelasPage()),
-              );
-            },
-            child: _buildMateriBox("Biologi"),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const KelasPage()),
-              );
-            },
-            child: _buildMateriBox("PKN"),
-          ),
-          const SizedBox(height: 20),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const KelasPage()),
-              );
-            },
-            child: _buildMateriBox("Fisika"),
+          // Ambil dan tampilkan mata pelajaran dari Firestore
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: pengajarCollection.snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData) {
+                  return const Center(child: Text('No data available'));
+                }
+
+                final data = snapshot.data!.docs;
+                return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    // Ambil nama mata pelajaran dari field dalam document
+                    String subject = data[index]['mataPelajaran'];
+
+                    // Mengecek supaya tidak ada duplikasi mata pelajaran
+                    if (displayedClasses.contains(subject)) {
+                      return const SizedBox.shrink(); // Jika sudah ditampilkan, tidak tampilkan lagi
+                    }
+
+                    // Tambahkan mata pelajaran ke dalam set agar tidak duplikat
+                    displayedClasses.add(subject);
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                      child: GestureDetector(
+                        onTap: () {
+                          // Kirim nama mata pelajaran ke halaman KelasPage
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const KelasPage(),
+                            ),
+                          );
+                        },
+                        child: _buildMateriBox(subject),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
