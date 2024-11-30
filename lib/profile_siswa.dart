@@ -39,7 +39,8 @@ class UserModel {
     };
   }
 
-  factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+  factory UserModel.fromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return UserModel(
       id: document.id,
@@ -267,7 +268,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
         _buildUserInfoCard("Nama", userModel!.name),
         _buildUserInfoCard("Email", userModel!.email),
         _buildUserInfoCard("Gender", userModel!.gender),
-        _buildUserInfoCard("Kelas", userModel!.kelas),
+        _buildUserInfoCard("Kelas", userModel!.kelas, isKelas: true),
         _buildUserInfoCard("NISN", userModel!.nisn),
         _buildUserInfoCard("Password", userModel!.password, isPassword: true),
       ],
@@ -275,11 +276,13 @@ class ProfileSiswaState extends State<ProfileSiswa> {
   }
 
   Widget _buildUserInfoCard(String title, String value,
-      {bool isPassword = false}) {
+      {bool isPassword = false, bool isKelas = false}) {
     return GestureDetector(
       onTap: () {
         if (isPassword) {
           showChangePasswordModal();
+        } else if (isKelas) {
+          showChangeKelasModal();
         } else {
           logger.i('$title: $value diklik');
         }
@@ -322,10 +325,14 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   ],
                 ),
               ),
-              if (isPassword)
+              if (isPassword || isKelas)
                 GestureDetector(
                   onTap: () {
-                    showChangePasswordModal();
+                    if (isPassword) {
+                      showChangePasswordModal();
+                    } else if (isKelas) {
+                      showChangeKelasModal();
+                    }
                   },
                   child: const CircleAvatar(
                     radius: 20,
@@ -344,6 +351,90 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     );
   }
 
+  Future<void> showChangeKelasModal() async {
+    final List<String> kelasOptions = ['10', '11', '12'];
+    String? selectedKelas = userModel?.kelas;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Ubah Kelas'),
+          content: DropdownButtonFormField<String>(
+            value: selectedKelas,
+            items: kelasOptions.map((String className) {
+              return DropdownMenuItem<String>(
+                value: className,
+                child: Text('Kelas $className'),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              selectedKelas = newValue;
+            },
+            decoration: InputDecoration(
+              labelText: 'Pilih Kelas',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.blue),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.blue, width: 1),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.blue, width: 1),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (selectedKelas != null) {
+                  await _updateKelas(selectedKelas!);
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Harap pilih kelas')),
+                  );
+                }
+              },
+              child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateKelas(String newKelas) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .set(
+        {'kelas': newKelas},
+        SetOptions(merge: true),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kelas berhasil diubah')),
+      );
+      logger.i('Kelas berhasil diubah menjadi $newKelas');
+    } catch (e) {
+      logger.e('Gagal memperbarui kelas: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal memperbarui kelas')),
+      );
+    }
+  }
+
   Future<void> showChangePasswordModal() async {
     final TextEditingController newPasswordController = TextEditingController();
     final TextEditingController confirmPasswordController =
@@ -359,13 +450,41 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               children: [
                 TextField(
                   controller: newPasswordController,
-                  decoration: const InputDecoration(labelText: 'Password Baru'),
+                  decoration: InputDecoration(
+                    labelText: 'Password Baru',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                  ),
                   obscureText: true,
                 ),
+                const SizedBox(height: 10),
                 TextField(
                   controller: confirmPasswordController,
-                  decoration:
-                      const InputDecoration(labelText: 'Konfirmasi Password'),
+                  decoration: InputDecoration(
+                    labelText: 'Konfirmasi Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                  ),
                   obscureText: true,
                 ),
               ],

@@ -356,13 +356,41 @@ class ProfileGuruState extends State<ProfileGuru> {
               children: [
                 TextField(
                   controller: newPasswordController,
-                  decoration: const InputDecoration(labelText: 'Password Baru'),
+                  decoration: InputDecoration(
+                    labelText: 'Password Baru',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                  ),
                   obscureText: true,
                 ),
+                const SizedBox(height: 10),
                 TextField(
                   controller: confirmPasswordController,
-                  decoration:
-                      const InputDecoration(labelText: 'Konfirmasi Password'),
+                  decoration: InputDecoration(
+                    labelText: 'Konfirmasi Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                    ),
+                  ),
                   obscureText: true,
                 ),
               ],
