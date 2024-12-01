@@ -232,7 +232,7 @@ class TambahKontenState extends State<TambahKonten> {
                       validator: (value) {
                         if ((value == null || value.isEmpty) &&
                             pdfBytes == null) {
-                          return 'Masukkan link YouTube atau pilih file PDF';
+                          return 'Silahkan masukkan link video YouTube';
                         }
                         return null;
                       },

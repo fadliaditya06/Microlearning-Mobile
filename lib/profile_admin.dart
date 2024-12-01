@@ -295,7 +295,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
           ],
         ),
         padding: const EdgeInsets.all(10),
-        width: 400, 
+        width: 360, 
         height: 75,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

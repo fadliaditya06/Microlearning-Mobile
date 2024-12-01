@@ -296,7 +296,7 @@ class ProfileGuruState extends State<ProfileGuru> {
             ],
           ),
           padding: const EdgeInsets.all(10),
-          width: 400, // Mengisi lebar layar tanpa masalah
+          width: 360, 
           height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
