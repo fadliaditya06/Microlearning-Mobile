@@ -86,18 +86,32 @@ class RegisterState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 5),
                     DropdownButtonFormField<String>(
-                      value: role,
+                      value: role.isEmpty ? null : role,
                       onChanged: (String? newValue) {
                         setState(() {
                           role = newValue!;
                         });
                       },
-                      items:
-                          options.map<DropdownMenuItem<String>>((String value) {
+                      items: options.map<DropdownMenuItem<String>>((String value) {
+                        // Menampilkan dalam bahasa indonesia
+                        String displayValue;
+                        switch (value) {
+                          case 'Student':
+                            displayValue = 'Siswa';
+                            break;
+                          case 'Teacher':
+                            displayValue = 'Guru';
+                            break;
+                          case 'Admin':
+                            displayValue = 'Admin';
+                            break;
+                          default:
+                            displayValue = value;
+                        }
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(
-                            value,
+                            displayValue,
                             style: GoogleFonts.poppins(),
                           ),
                         );
@@ -188,7 +202,6 @@ class RegisterState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-
                     // Input NISN/NIP berdasarkan role yang dipilih
                     Text(
                       role == 'Student' ? 'NISN' : 'NIP',
@@ -224,7 +237,6 @@ class RegisterState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-
                     // Pilihan kelas hanya untuk role Student
                     if (role == 'Student')
                       Column(
@@ -277,7 +289,6 @@ class RegisterState extends State<RegisterPage> {
                           const SizedBox(height: 20),
                         ],
                       ),
-
                     // Pilihan Gender dengan RadioListTile
                     Text(
                       'Jenis Kelamin',
@@ -319,8 +330,7 @@ class RegisterState extends State<RegisterPage> {
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    // Input password
+                    // Input Password
                     Text(
                       'Password',
                       style: GoogleFonts.poppins(),
@@ -367,7 +377,7 @@ class RegisterState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Input konfirmasi password
+                    // Input Konfirmasi Password
                     Text(
                       'Konfirmasi Password',
                       style: GoogleFonts.poppins(),

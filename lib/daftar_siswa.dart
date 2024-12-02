@@ -98,18 +98,15 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 6, horizontal: 10),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
                       suffixIcon: const Icon(Icons.search),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Color(0xFF13ADDE), width: 1),
+                        borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                            color: Color(0xFF13ADDE), width: 1),
+                        borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
                       ),
                     ),
                   ),
@@ -129,7 +126,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                 if (!snapshot.hasData ||
                     _filterSearchResults(snapshot.data!.docs).isEmpty) {
                   return Padding(
-                  padding: const EdgeInsets.only(top: 50),
+                    padding: const EdgeInsets.only(top: 50),
                     child: Text(
                       'Tidak ada data siswa yang cocok.',
                       style: GoogleFonts.poppins(fontSize: 17),
@@ -170,10 +167,9 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                             as ImageProvider,
                               ),
                               const SizedBox(width: 12),
-
-                              // Informasi Nama dan NISN 
+                              // Informasi Nama dan NISN
                               SizedBox(
-                                width: 100, 
+                                width: 100,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -197,29 +193,28 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                   ],
                                 ),
                               ),
-
                               const Spacer(),
-
                               // Garis
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 2),
                                 child: Container(
-                                  width: 1, 
-                                  height: 40, 
+                                  width: 1,
+                                  height: 40,
                                   color: Colors.black,
                                 ),
                               ),
-
-                              const SizedBox(width: 10),
-
-                              // Informasi Jenis Kelamin dan Kelas
+                              const SizedBox(width: 5), 
+                              // Informasi JK dan Kelas
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      data['gender'] ?? 'Gender tidak tersedia',
+                                      data['gender'] != null
+                                          ? (data['gender'] == 'Male'
+                                              ? 'Laki-laki'
+                                              : 'Perempuan')
+                                          : 'Jenis kelamin tidak tersedia',
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,

@@ -57,6 +57,19 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
     }
   }
 
+  String peranIndo(String? role) {
+    switch (role) {
+      case 'Student':
+        return 'Siswa';
+      case 'Teacher':
+        return 'Guru';
+      case 'Admin':
+        return 'Admin';
+      default:
+        return 'Tidak ada';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,7 +298,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(
-                            docData['role'] ?? 'Tidak ada',
+                            peranIndo (docData['role']),
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(
