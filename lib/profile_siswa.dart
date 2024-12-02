@@ -268,7 +268,8 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     }
 
     // Menampilkan informasi dalam bahasa Indonesia
-    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ??
+        'Tidak diketahui';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,9 +322,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 15), 
+                    const SizedBox(height: 15),
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
@@ -464,11 +466,13 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                   ),
                   obscureText: true,
@@ -484,11 +488,13 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                   ),
                   obscureText: true,
@@ -583,8 +589,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               ),
             ),
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.start, 
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -636,7 +641,8 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),

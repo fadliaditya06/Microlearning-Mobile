@@ -265,7 +265,8 @@ class ProfileGuruState extends State<ProfileGuru> {
     }
 
     // Menampilkan informasi dalam bahasa Indonesia
-    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ??
+        'Tidak diketahui';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,7 +305,7 @@ class ProfileGuruState extends State<ProfileGuru> {
             ],
           ),
           padding: const EdgeInsets.all(10),
-          width: 360, 
+          width: 360,
           height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -315,9 +316,10 @@ class ProfileGuruState extends State<ProfileGuru> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 15), 
+                    const SizedBox(height: 15),
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
@@ -370,11 +372,13 @@ class ProfileGuruState extends State<ProfileGuru> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                   ),
                   obscureText: true,
@@ -390,11 +394,13 @@ class ProfileGuruState extends State<ProfileGuru> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blue, width: 1),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 1),
                     ),
                   ),
                   obscureText: true,
@@ -489,13 +495,13 @@ class ProfileGuruState extends State<ProfileGuru> {
               ),
             ),
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.start, 
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.black, size: 25),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -541,7 +547,8 @@ class ProfileGuruState extends State<ProfileGuru> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),

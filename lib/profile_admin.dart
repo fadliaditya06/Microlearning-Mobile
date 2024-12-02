@@ -265,7 +265,8 @@ class ProfileAdminState extends State<ProfileAdmin> {
     }
 
     // Menampilkan informasi dalam bahasa Indonesia
-    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ??
+        'Tidak diketahui';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,57 +280,59 @@ class ProfileAdminState extends State<ProfileAdmin> {
     );
   }
 
-  Widget _buildUserInfoCard(String title, String value, {bool isPassword = false}) {
-  return GestureDetector(
-    onTap: () {
-      if (isPassword) {
-        // Tidak ada aksi saat password diklik
-      } else {
-        logger.i('$title: $value diklik');
-      }
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(10),
-        width: 360, 
-        height: 75,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 15), 
-                  Text(
-                    isPassword ? '••••••' : value,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ],
+  Widget _buildUserInfoCard(String title, String value,
+      {bool isPassword = false}) {
+    return GestureDetector(
+      onTap: () {
+        if (isPassword) {
+          // Tidak ada aksi saat password diklik
+        } else {
+          logger.i('$title: $value diklik');
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
               ),
-            ),
-          ],
+            ],
+          ),
+          padding: const EdgeInsets.all(10),
+          width: 360,
+          height: 75,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      isPassword ? '••••••' : value,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Future<void> showLogoutConfirmation() async {
     showDialog(
@@ -376,8 +379,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
               ),
             ),
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.start, 
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -429,7 +431,8 @@ class ProfileAdminState extends State<ProfileAdmin> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
