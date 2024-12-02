@@ -17,7 +17,7 @@ class UserModel {
   final String nip;
   final String password;
 
-  const UserModel({
+  UserModel({
     this.id,
     required this.email,
     required this.name,
@@ -36,6 +36,11 @@ class UserModel {
       "password": password,
     };
   }
+
+  Map<String, String> genderMapping = {
+    "male": "Laki-laki",
+    "female": "Perempuan",
+  };
 
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
@@ -259,12 +264,15 @@ class ProfileGuruState extends State<ProfileGuru> {
       return const SizedBox();
     }
 
+    // Menampilkan informasi dalam bahasa Indonesia
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildUserInfoCard("Nama", userModel!.name),
         _buildUserInfoCard("Email", userModel!.email),
-        _buildUserInfoCard("Gender", userModel!.gender),
+        _buildUserInfoCard("Jenis Kelamin", jkIndo),
         _buildUserInfoCard("NIP", userModel!.nip),
         _buildUserInfoCard("Password", userModel!.password, isPassword: true),
       ],
@@ -307,11 +315,9 @@ class ProfileGuruState extends State<ProfileGuru> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                        height: 15), // Menambahkan jarak antara title dan value
+                    const SizedBox(height: 15), 
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
@@ -484,13 +490,12 @@ class ProfileGuruState extends State<ProfileGuru> {
             ),
             child: Row(
               mainAxisAlignment:
-                  MainAxisAlignment.start, // Ikon dan teks sejajar kiri
+                  MainAxisAlignment.start, 
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.black, size: 25),
+                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
                     onPressed: () {
                       Navigator.pop(context);
                     },

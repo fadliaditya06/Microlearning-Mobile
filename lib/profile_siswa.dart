@@ -17,7 +17,7 @@ class UserModel {
   final String nisn;
   final String password;
 
-  const UserModel({
+  UserModel({
     this.id,
     required this.email,
     required this.name,
@@ -38,6 +38,11 @@ class UserModel {
       "password": password,
     };
   }
+
+  Map<String, String> genderMapping = {
+    "male": "Laki-laki",
+    "female": "Perempuan",
+  };
 
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
@@ -262,12 +267,15 @@ class ProfileSiswaState extends State<ProfileSiswa> {
       return const SizedBox();
     }
 
+    // Menampilkan informasi dalam bahasa Indonesia
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildUserInfoCard("Nama", userModel!.name),
         _buildUserInfoCard("Email", userModel!.email),
-        _buildUserInfoCard("Gender", userModel!.gender),
+        _buildUserInfoCard("Jenis Kelamin", jkIndo),
         _buildUserInfoCard("Kelas", userModel!.kelas, isKelas: true),
         _buildUserInfoCard("NISN", userModel!.nisn),
         _buildUserInfoCard("Password", userModel!.password, isPassword: true),
@@ -302,7 +310,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
             ],
           ),
           padding: const EdgeInsets.all(10),
-          width: 360, 
+          width: 360,
           height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -313,11 +321,9 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                        height: 15), // Menambahkan jarak antara title dan value
+                    const SizedBox(height: 15), 
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
@@ -578,7 +584,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
             ),
             child: Row(
               mainAxisAlignment:
-                  MainAxisAlignment.start, // Ikon dan teks sejajar kiri
+                  MainAxisAlignment.start, 
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
