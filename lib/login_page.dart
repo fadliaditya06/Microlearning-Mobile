@@ -244,35 +244,41 @@ class LoginFormState extends State<LoginForm> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            if (selectedRole == null || selectedRole!.isEmpty) {
-                              showErrorModal(context, 'Peran harus dipilih');
-                              return;
-                            }
-
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            await signIn(
-                                emailController.text, passwordController.text);
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          }
-                        },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        onPressed: _isLoading
+                            ? null
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (selectedRole == null ||
+                                      selectedRole!.isEmpty) {
+                                    showErrorModal(
+                                        context, 'Peran harus dipilih');
+                                    return;
+                                  }
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await signIn(emailController.text,
+                                      passwordController.text);
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
+                              },
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    if (_isLoading) const CircularProgressIndicator(),
                   ],
                 ),
               ),
@@ -287,7 +293,7 @@ class LoginFormState extends State<LoginForm> {
   Future<void> signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
-        // Ambil email dari database 
+        // Ambil email dari database
         QuerySnapshot snapshot = await FirebaseFirestore.instance
             .collection('users')
             .where('email', isEqualTo: email)
@@ -297,7 +303,7 @@ class LoginFormState extends State<LoginForm> {
         if (snapshot.docs.isEmpty) {
           // Jika email tidak ditemukan, tampilkan kesalahan
           showErrorModal(context, 'Email dan password Anda salah');
-          return; 
+          return;
         }
 
         // Mengambil email dari Firestore dan cocokkan dengan case-sensitive
