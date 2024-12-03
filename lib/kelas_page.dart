@@ -15,7 +15,7 @@ class KelasPageState extends State<KelasPage> {
       FirebaseFirestore.instance.collection('pengajar');
 
   // Menyimpan kelas yang sudah ditampilkan
-  Set<String> displayedClasses = {};
+  Set<String> displayedKelas = {};
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +76,12 @@ class KelasPageState extends State<KelasPage> {
                     String subject = data[index]['kelas'];
 
                     // Mengecek supaya tidak ada duplikasi kelas
-                    if (displayedClasses.contains(subject)) {
+                    if (displayedKelas.contains(subject)) {
                       return const SizedBox.shrink(); 
                     }
 
                     // Tambahkan kelas ke dalam set agar tidak duplikat
-                    displayedClasses.add(subject);
+                    displayedKelas.add(subject);
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),

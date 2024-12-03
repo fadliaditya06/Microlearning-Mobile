@@ -15,7 +15,7 @@ class _MateriPageState extends State<MateriPage> {
       FirebaseFirestore.instance.collection('pengajar');
   
   // Set untuk menyimpan mata pelajaran yang sudah ditampilkan
-  Set<String> displayedClasses = Set();
+  Set<String> displayedMapel = {};
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +66,22 @@ class _MateriPageState extends State<MateriPage> {
                 return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    // Ambil nama mata pelajaran dari field dalam document
+                    // Ambil nama mata pelajaran 
                     String subject = data[index]['mataPelajaran'];
 
                     // Mengecek supaya tidak ada duplikasi mata pelajaran
-                    if (displayedClasses.contains(subject)) {
+                    if (displayedMapel.contains(subject)) {
                       return const SizedBox.shrink(); // Jika sudah ditampilkan, tidak tampilkan lagi
                     }
 
                     // Tambahkan mata pelajaran ke dalam set agar tidak duplikat
-                    displayedClasses.add(subject);
+                    displayedMapel.add(subject);
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
                       child: GestureDetector(
                         onTap: () {
-                          // Kirim nama mata pelajaran ke halaman KelasPage
+                          // Kirim nama mata pelajaran ke halaman kelas
                           Navigator.push(
                             context,
                             MaterialPageRoute(
