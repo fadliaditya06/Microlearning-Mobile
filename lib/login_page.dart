@@ -53,18 +53,11 @@ class LoginFormState extends State<LoginForm> {
               ),
               child: Stack(
                 children: <Widget>[
-                  Positioned(
-                    top: -30,
-                    left: 15,
-                    width: 200,
-                    height: 200,
+                  Center(
                     child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/logo-ulilalbab.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(left: 80, right: 80, top: 10),
+                      child: Image.asset('assets/images/logo-ulilalbab.png'),
                     ),
                   ),
                 ],
@@ -102,11 +95,12 @@ class LoginFormState extends State<LoginForm> {
                       value: selectedRole,
                       hint: Text("Peran",
                           style: GoogleFonts.poppins(
-                            fontSize: 15,
+                            fontSize: 15, color: Colors.black
                           )),
                       items: ['Student', 'Teacher', 'Admin'].map((role) {
                         String displayValue =
-                            ''; // Menampilkan peran dalam bahasa indonesia
+                            ''; 
+                        // Menampilkan peran dalam bahasa indonesia
                         switch (role) {
                           case 'Student':
                             displayValue = 'Siswa';
