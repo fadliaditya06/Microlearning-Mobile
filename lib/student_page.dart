@@ -44,12 +44,11 @@ class _StudentPageState extends State<StudentPage> {
               ),
               child: Stack(
                 children: <Widget>[
-                  Positioned(
-                    top: -30,
-                    left: 15,
-                    width: 200,
-                    height: 200,
+                  Align(
+                    alignment: const Alignment(-0.7, 0),
                     child: Container(
+                      width: 200,
+                      height: 200,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
                           image: AssetImage('assets/images/logo-ulilalbab.png'),
@@ -58,18 +57,17 @@ class _StudentPageState extends State<StudentPage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 40,
-                    right: 15,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileSiswa(),
-                          ),
-                        );
-                      },
+                  Align(
+                  alignment: const Alignment(0.9, 0),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileSiswa(),
+                        ),
+                      );
+                    },
                       icon: const Icon(
                         Icons.person,
                         size: 40,
