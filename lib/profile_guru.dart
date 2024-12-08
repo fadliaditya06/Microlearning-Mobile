@@ -366,6 +366,9 @@ class ProfileGuruState extends State<ProfileGuru> {
                   controller: newPasswordController,
                   decoration: InputDecoration(
                     labelText: 'Password Baru',
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF000000),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.blue),
@@ -388,6 +391,9 @@ class ProfileGuruState extends State<ProfileGuru> {
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
                     labelText: 'Konfirmasi Password',
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF000000),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.blue),
@@ -413,7 +419,10 @@ class ProfileGuruState extends State<ProfileGuru> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -427,7 +436,10 @@ class ProfileGuruState extends State<ProfileGuru> {
                   );
                 }
               },
-              child: const Text('Simpan'),
+              child: const Text(
+                'Simpan',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -462,7 +474,10 @@ class ProfileGuruState extends State<ProfileGuru> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -471,7 +486,10 @@ class ProfileGuruState extends State<ProfileGuru> {
                   MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
-              child: const Text('Logout'),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -534,7 +552,7 @@ class ProfileGuruState extends State<ProfileGuru> {
                   ElevatedButton.icon(
                     onPressed: showLogoutConfirmation,
                     icon: const Icon(
-                      Icons.exit_to_app,
+                      Icons.logout_outlined,
                       color: Colors.black,
                     ),
                     label: const Text(

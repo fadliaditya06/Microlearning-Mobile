@@ -346,7 +346,10 @@ class ProfileAdminState extends State<ProfileAdmin> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -355,7 +358,10 @@ class ProfileAdminState extends State<ProfileAdmin> {
                   MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
-              child: const Text('Logout'),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -418,7 +424,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
                   ElevatedButton.icon(
                     onPressed: showLogoutConfirmation,
                     icon: const Icon(
-                      Icons.exit_to_app,
+                      Icons.logout_outlined,
                       color: Colors.black,
                     ),
                     label: const Text(

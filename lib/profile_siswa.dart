@@ -381,6 +381,9 @@ class ProfileSiswaState extends State<ProfileSiswa> {
             },
             decoration: InputDecoration(
               labelText: 'Pilih Kelas',
+              labelStyle: const TextStyle(
+                color: Color(0xFF000000),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.blue),
@@ -400,7 +403,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -413,7 +419,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   );
                 }
               },
-              child: const Text('Simpan'),
+              child: const Text(
+                'Simpan',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -460,6 +469,9 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   controller: newPasswordController,
                   decoration: InputDecoration(
                     labelText: 'Password Baru',
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF000000),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.blue),
@@ -482,6 +494,9 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
                     labelText: 'Konfirmasi Password',
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF000000),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.blue),
@@ -507,7 +522,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -521,7 +539,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   );
                 }
               },
-              child: const Text('Simpan'),
+              child: const Text(
+                'Simpan',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -556,7 +577,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -565,7 +589,10 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
-              child: const Text('Logout'),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -628,7 +655,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                   ElevatedButton.icon(
                     onPressed: showLogoutConfirmation,
                     icon: const Icon(
-                      Icons.exit_to_app,
+                      Icons.logout_outlined,
                       color: Colors.black,
                     ),
                     label: const Text(
