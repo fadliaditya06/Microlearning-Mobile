@@ -29,14 +29,20 @@ class KelolaPengajarState extends State<KelolaPengajar> {
               onPressed: () {
                 Navigator.of(context).pop(); // Tutup dialog
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
                 _deletePengajar(id);
                 Navigator.of(context).pop(); // Tutup dialog setelah menghapus
               },
-              child: const Text('Hapus'),
+              child: const Text(
+                'Hapus',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );

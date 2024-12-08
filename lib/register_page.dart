@@ -79,7 +79,7 @@ class RegisterState extends State<RegisterPage> {
                 key: _formKey,
                 child: ListView(
                   children: [
-                    // Dropdown untuk memilih role (Student, Teacher, Admin)
+                    // Dropdown untuk memilih role (Siswa, Guru, dan Admin)
                     Text(
                       'Peran',
                       style: GoogleFonts.poppins(),
@@ -134,7 +134,7 @@ class RegisterState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Input email
+                    // Input Email
                     Text(
                       'Email',
                       style: GoogleFonts.poppins(),
@@ -158,7 +158,7 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Email',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -168,7 +168,7 @@ class RegisterState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Input nama
+                    // Input Nama
                     Text(
                       'Nama',
                       style: GoogleFonts.poppins(),
@@ -192,7 +192,7 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Nama',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -227,7 +227,7 @@ class RegisterState extends State<RegisterPage> {
                         ),
                         labelText:
                             role == 'Student' ? 'Input NISN' : 'Input NIP',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -237,7 +237,7 @@ class RegisterState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Pilihan kelas hanya untuk role Student
+                    // Pilihan Kelas hanya untuk role Siswa
                     if (role == 'Student')
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,6 +278,7 @@ class RegisterState extends State<RegisterPage> {
                                     color: Colors.blue, width: 1),
                               ),
                               labelText: 'Pilih Kelas',
+                              labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
                             ),
                             validator: (value) {
                               if (value == null) {
@@ -355,7 +356,7 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Password',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isObscure
@@ -402,7 +403,7 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Konfirmasi Password',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value != passwordController.text) {

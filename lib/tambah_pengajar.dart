@@ -160,7 +160,10 @@ class TambahPengajarState extends State<TambahPengajar> {
                             selectedTeacher = newValue;
                           });
                         },
-                        hint: const Text('Pilih Guru'),
+                        hint: const Text(
+                          'Pilih Guru',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       // Input Mata Pelajaran
@@ -197,7 +200,10 @@ class TambahPengajarState extends State<TambahPengajar> {
                             selectedSubject = newValue;
                           });
                         },
-                        hint: const Text('Pilih Mata Pelajaran'),
+                        hint: const Text(
+                          'Pilih Mata Pelajaran',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       // Input Kelas
@@ -234,7 +240,10 @@ class TambahPengajarState extends State<TambahPengajar> {
                             selectedKelas = newValue;
                           });
                         },
-                        hint: const Text('Pilih Kategori Kelas'),
+                        hint: const Text(
+                          'Pilih Kategori Kelas',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                       const SizedBox(height: 40),
                       // Tombol Simpan

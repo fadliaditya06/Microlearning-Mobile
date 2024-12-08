@@ -29,14 +29,20 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {
                 _deleteUsers(id);
                 Navigator.of(context).pop();
               },
-              child: const Text('Hapus'),
+              child: const Text(
+                'Hapus',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
