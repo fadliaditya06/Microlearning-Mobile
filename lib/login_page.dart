@@ -56,7 +56,8 @@ class LoginFormState extends State<LoginForm> {
                   Center(
                     child: Container(
                       width: double.infinity,
-                      margin: const EdgeInsets.only(left: 80, right: 80, top: 10),
+                      margin:
+                          const EdgeInsets.only(left: 80, right: 80, top: 10),
                       child: Image.asset('assets/images/logo-ulilalbab.png'),
                     ),
                   ),
@@ -95,11 +96,9 @@ class LoginFormState extends State<LoginForm> {
                       value: selectedRole,
                       hint: Text("Peran",
                           style: GoogleFonts.poppins(
-                            fontSize: 15, color: Colors.black
-                          )),
+                              fontSize: 15, color: Colors.black)),
                       items: ['Student', 'Teacher', 'Admin'].map((role) {
-                        String displayValue =
-                            ''; 
+                        String displayValue = '';
                         // Menampilkan peran dalam bahasa indonesia
                         switch (role) {
                           case 'Student':
@@ -154,6 +153,9 @@ class LoginFormState extends State<LoginForm> {
                       controller: emailController,
                       decoration: InputDecoration(
                         labelText: "Email",
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF000000),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
@@ -189,6 +191,9 @@ class LoginFormState extends State<LoginForm> {
                       obscureText: _isObscure,
                       decoration: InputDecoration(
                         labelText: "Password",
+                        labelStyle: const TextStyle(
+                          color: Color(0xFF000000),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: const BorderSide(color: Colors.blue),
@@ -384,7 +389,10 @@ class LoginFormState extends State<LoginForm> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
