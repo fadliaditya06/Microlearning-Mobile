@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'materi_page.dart'; 
 import 'quiz_page.dart';   
@@ -45,7 +46,7 @@ class _StudentPageState extends State<StudentPage> {
               child: Stack(
                 children: <Widget>[
                   Align(
-                    alignment: const Alignment(-0.7, 0),
+                    alignment: const Alignment(-0.6, 0),
                     child: Container(
                       width: 200,
                       height: 200,
@@ -69,9 +70,9 @@ class _StudentPageState extends State<StudentPage> {
                       );
                     },
                       icon: const Icon(
-                        Icons.person,
-                        size: 40,
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        CupertinoIcons.person_crop_circle,
+                        size: 35,
+                        color: Colors.black,
                       ),
                     ),
                   ),
