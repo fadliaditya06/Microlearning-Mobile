@@ -45,7 +45,7 @@ class LoginFormState extends State<LoginForm> {
             Container(
               height: 150,
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 253, 240, 69),
+                color: Color(0xFFFFFD55),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(150),
                   bottomRight: Radius.circular(150),
@@ -127,17 +127,17 @@ class LoginFormState extends State<LoginForm> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue),
+                          borderSide: const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
+                              const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
+                              const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                       ),
                       validator: (value) {
@@ -158,17 +158,17 @@ class LoginFormState extends State<LoginForm> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue),
+                          borderSide: const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
+                              const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
+                              const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                       ),
                       validator: (value) {
@@ -196,17 +196,17 @@ class LoginFormState extends State<LoginForm> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue),
+                          borderSide: const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
+                              const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
+                              const BorderSide(color:Color(0xFF13ADDE), width: 1),
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -237,7 +237,7 @@ class LoginFormState extends State<LoginForm> {
                       height: 70,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),

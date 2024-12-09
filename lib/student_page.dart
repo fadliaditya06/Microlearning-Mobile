@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'materi_page.dart'; 
-import 'quiz_page.dart';   
-import 'profile_siswa.dart'; 
+import 'materi_page.dart';
+import 'quiz_page.dart';
+import 'profile_siswa.dart';
 
 class StudentPage extends StatefulWidget {
   const StudentPage({super.key});
@@ -23,8 +23,8 @@ class _StudentPageState extends State<StudentPage> {
 
   static const List<Widget> _pages = <Widget>[
     HomeContent(), // Beranda Home
-    MateriPage(),  // Halaman Materi
-    QuizPage(),    // Halaman Quiz
+    MateriPage(), // Halaman Materi
+    QuizPage(), // Halaman Quiz
   ];
 
   @override
@@ -32,7 +32,7 @@ class _StudentPageState extends State<StudentPage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          // Header setengah lingkaran 
+          // Header setengah lingkaran
           if (_selectedIndex == 0)
             Container(
               height: 150,
@@ -59,16 +59,16 @@ class _StudentPageState extends State<StudentPage> {
                     ),
                   ),
                   Align(
-                  alignment: const Alignment(0.9, 0),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileSiswa(),
-                        ),
-                      );
-                    },
+                    alignment: const Alignment(0.9, 0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileSiswa(),
+                          ),
+                        );
+                      },
                       icon: const Icon(
                         CupertinoIcons.person_crop_circle,
                         size: 35,
@@ -87,7 +87,8 @@ class _StudentPageState extends State<StudentPage> {
       ),
       bottomNavigationBar: Container(
         color: const Color(0xFFFFFD55),
-        padding: const EdgeInsets.symmetric(vertical: 10.0), // Atur padding horizontal
+        padding: const EdgeInsets.symmetric(
+            vertical: 10.0), // Atur padding horizontal
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -110,16 +111,16 @@ class _StudentPageState extends State<StudentPage> {
         children: [
           // Highlight pada latar belakang ikon
           Container(
-            width: 70, 
+            width: 70,
             decoration: BoxDecoration(
               color: isSelected ? Colors.white : Colors.transparent,
-              borderRadius: BorderRadius.circular(40), 
+              borderRadius: BorderRadius.circular(40),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 5.0), 
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Icon(
               icon,
               color: Colors.black,
-              size: 28, 
+              size: 28,
             ),
           ),
           const SizedBox(height: 4),
@@ -162,7 +163,7 @@ class _HomeContentState extends State<HomeContent> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 20), 
+          const SizedBox(height: 20),
           const Center(
             child: CircleAvatar(
               radius: 100, // Logo size
@@ -184,14 +185,16 @@ class _HomeContentState extends State<HomeContent> {
               'Merupakan Lembaga Pendidikan Islam Rujukan di Provinsi Kepulauan Riau, alhamdulillah saat ini masih diberi amanah mengelola jenjang Pendidikan Tingkat TKIT, SDIT, SMPIT Dan SMAIT. Adapun lembaga pendidikan ini menyelenggarakan Pendidikan yang Berlandaskan pada Nilai-Nilai Ajaran Islam Dengan Berorientasi pada Terbentuknya Generasi Rabbani yaitu Cerdas, Sholih dan Berkarakter Qur\'ani.',
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
-                fontSize: 13,),
+                fontSize: 13,
+              ),
             ),
           ),
           const SizedBox(height: 30),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 16.0), // Menambahkan padding dari kiri
+              padding: const EdgeInsets.only(
+                  left: 16.0), // Menambahkan padding dari kiri
               child: Text(
                 "Jenjang Pendidikan",
                 style: GoogleFonts.poppins(
@@ -203,7 +206,7 @@ class _HomeContentState extends State<HomeContent> {
           ),
           const SizedBox(height: 20),
           Container(
-            color: Colors.blue,
+            color: const Color(0xFF13ADDE),
             padding: const EdgeInsets.all(10.0),
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -232,13 +235,13 @@ class _HomeContentState extends State<HomeContent> {
               },
             ),
           ),
-          const SizedBox(height: 50), // Jarak di bawah GridView
         ],
       ),
     );
   }
 
-  Widget _buildCard({required int index, required String image, required String title}) {
+  Widget _buildCard(
+      {required int index, required String image, required String title}) {
     return MouseRegion(
       onEnter: (_) {
         setState(() {
@@ -263,9 +266,14 @@ class _HomeContentState extends State<HomeContent> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage(image),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    image,
+                    height: 97, 
+                    width: 93,
+                    fit: BoxFit.cover, 
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Flexible(

@@ -204,7 +204,7 @@ class _HomeContentState extends State<HomeContent> {
           ),
           const SizedBox(height: 20),
           Container(
-            color: Colors.blue,
+            color: const Color(0xFF13ADDE),
             padding: const EdgeInsets.all(10.0),
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -233,7 +233,6 @@ class _HomeContentState extends State<HomeContent> {
               },
             ),
           ),
-          const SizedBox(height: 50), // Jarak di bawah GridView
         ],
       ),
     );
@@ -264,9 +263,14 @@ class _HomeContentState extends State<HomeContent> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage(image),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    image,
+                    height: 97, 
+                    width: 93,
+                    fit: BoxFit.cover, 
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Flexible(
