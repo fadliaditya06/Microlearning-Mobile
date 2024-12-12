@@ -238,6 +238,7 @@ class LoginFormState extends State<LoginForm> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF13ADDE),
+                          disabledBackgroundColor: const Color(0xFF13ADDE),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
