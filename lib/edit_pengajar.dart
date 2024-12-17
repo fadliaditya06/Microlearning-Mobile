@@ -16,10 +16,11 @@ class EditPengajarState extends State<EditPengajar> {
   String? selectedKelas;
 
   final List<String> mataPelajaranList = [
-    'Matematika',
-    'Bahasa Indonesia',
-    'Biologi',
-    'Fisika',
+    'MATEMATIKA',
+    'BAHASA INDONESIA',
+    'BIOLOGI',
+    'FISIKA',
+    'PKN',
   ];
 
   final List<String> kelasList = [

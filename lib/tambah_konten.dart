@@ -17,7 +17,7 @@ class TambahKonten extends StatefulWidget {
 
 class TambahKontenState extends State<TambahKonten> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController subababController = TextEditingController();
+  final TextEditingController subBabController = TextEditingController();
   final TextEditingController linkvidioController = TextEditingController();
 
   String? pdfFileName;
@@ -38,7 +38,7 @@ class TambahKontenState extends State<TambahKonten> {
 
   @override
   void dispose() {
-    subababController.dispose();
+    subBabController.dispose();
     linkvidioController.dispose();
     super.dispose();
   }
@@ -95,10 +95,10 @@ class TambahKontenState extends State<TambahKonten> {
                 const SizedBox(width: 10),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      'Tambah Konten Pelajaran',
-                      style: GoogleFonts.poppins(fontSize: 21),
+                      'Tambah Konten',
+                      style: GoogleFonts.poppins(fontSize: 25),
                       overflow: TextOverflow.ellipsis, 
                     ),
                   ),
@@ -122,7 +122,8 @@ class TambahKontenState extends State<TambahKonten> {
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
-                      controller: subababController,
+                      controller: subBabController,
+                      cursorColor: const Color(0xFF13ADDE),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -139,7 +140,7 @@ class TambahKontenState extends State<TambahKonten> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Judul Sub Bab',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: Colors.black),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -166,7 +167,7 @@ class TambahKontenState extends State<TambahKonten> {
                           height: 50,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: const Color(0xFF13ADDE),
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -211,6 +212,7 @@ class TambahKontenState extends State<TambahKonten> {
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: linkvidioController,
+                      cursorColor: const Color(0xFF13ADDE),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -227,7 +229,7 @@ class TambahKontenState extends State<TambahKonten> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Link Video',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelStyle: GoogleFonts.poppins(color: Colors.black),
                       ),
                       validator: (value) {
                         if ((value == null || value.isEmpty) &&
@@ -247,7 +249,8 @@ class TambahKontenState extends State<TambahKonten> {
                       height: 70,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
+                          disabledBackgroundColor: const Color(0xFF13ADDE),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -333,16 +336,19 @@ class TambahKontenState extends State<TambahKonten> {
         pdfUrl = await uploadTask.ref.getDownloadURL();
       }
 
+      // Konversi mataPelajaran menjadi huruf besar semua
+      final mataPelajaranUpperCase = mataPelajaran?.toUpperCase();
+
       // Simpan data ke Firestore dengan userId dan data tambahan
       await FirebaseFirestore.instance.collection('konten').add({
         'userId': user.uid, // Simpan userId
         'lessonId': widget.lessonId,
-        'judulSubBab': subababController.text,
+        'judulSubBab': subBabController.text,
         'linkVideo': videoUrl,
         'pdfUrl': pdfUrl,
         'namaGuru': namaGuru, // Simpan nama guru
         'kelas': kelas, // Simpan kelas
-        'mataPelajaran': mataPelajaran, // Simpan mata pelajaran
+        'mataPelajaran': mataPelajaranUpperCase, // Simpan mata pelajaran dalam huruf besar
         'createdAt': Timestamp.now(),
       });
 

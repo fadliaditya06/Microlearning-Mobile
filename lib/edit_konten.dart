@@ -43,11 +43,11 @@ class EditKontenState extends State<EditKonten> {
                 const SizedBox(width: 10),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 55),
                     child: Text(
-                      'Edit Konten Pelajaran',
-                      style: GoogleFonts.poppins(fontSize: 22),
-                      overflow: TextOverflow.ellipsis, // Teks terpotong jika terlalu panjang
+                      'Edit Konten',
+                      style: GoogleFonts.poppins(fontSize: 25),
+                      overflow: TextOverflow.ellipsis, 
                     ),
                   ),
                 ),
@@ -61,13 +61,14 @@ class EditKontenState extends State<EditKonten> {
               child: Form(
                 child: ListView(
                   children: [
-                    // Input Judul Sub Bab
+                    // Edit Judul Sub Bab
                     Text(
                       'Judul Sub Bab',
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
+                      readOnly: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -83,39 +84,62 @@ class EditKontenState extends State<EditKonten> {
                           borderSide:
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
-                        labelText: 'Genetika',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelText: 'Ubah Judul Sub Bab',
+                        labelStyle: GoogleFonts.poppins(color: Colors.black),
                       ),
                     ),
                     const SizedBox(height: 30),
-                    // Input Materi
+                    // Edit Materi PDF
                     Text(
                       'Materi',
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 5),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.blue),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 1),
-                        ),
-                        labelText: 'Materi Genetika.pdf',
-                        labelStyle: GoogleFonts.poppins(),
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const SizedBox(height: 5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF13ADDE),
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.upload, color: Colors.black, size: 25), 
+                                const SizedBox(width: 10), 
+                                Text(
+                                  'Ubah Materi PDF',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                        'Tidak ada file PDF',
+                          style: GoogleFonts.poppins(fontSize: 14),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 30),
-                    // Input Video
+                    // Edit Link Video Youtube
                     Text(
                       'Video',
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
@@ -137,18 +161,18 @@ class EditKontenState extends State<EditKonten> {
                           borderSide:
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
-                        labelText: 'https://www.youtube.com/',
-                        labelStyle: GoogleFonts.poppins(),
+                        labelText: 'Ubah Link Video',
+                        labelStyle: GoogleFonts.poppins(color: Colors.black),
                       ),
                     ),
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 50),
                     // Tombol untuk menyimpan
                     SizedBox(
                       width: double.infinity,
                       height: 70,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
@@ -161,8 +185,10 @@ class EditKontenState extends State<EditKonten> {
                                 true; // Tampilkan progress jika diperlukan
                           });
                         },
-                        child: Text(
-                          "Simpan",
+                        child: showProgress
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                          "Simpan Perubahan",
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: 15,
@@ -171,10 +197,6 @@ class EditKontenState extends State<EditKonten> {
                         ),
                       ),
                     ),
-                    if (showProgress)
-                      const Center(
-                          child:
-                              CircularProgressIndicator()), // Indikator loading
                   ],
                 ),
               ),

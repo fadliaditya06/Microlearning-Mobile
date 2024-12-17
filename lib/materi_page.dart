@@ -11,11 +11,11 @@ class MateriPage extends StatefulWidget {
 }
 
 class _MateriPageState extends State<MateriPage> {
-  final CollectionReference pengajarCollection =
-      FirebaseFirestore.instance.collection('pengajar');
-  
-  // Set untuk menyimpan mata pelajaran yang sudah ditampilkan
-  Set<String> displayedMapel = {};
+  final CollectionReference kontenCollection =
+      FirebaseFirestore.instance.collection('konten');
+
+  final Set<String> displayedClasses =
+      <String>{}; // Set untuk menyimpan mata pelajaran unik
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _MateriPageState extends State<MateriPage> {
                   child: Text(
                     'Mata Pelajaran',
                     style: GoogleFonts.poppins(
-                      fontSize: 26,
+                      fontSize: 25,
                       color: Colors.black,
                     ),
                   ),
@@ -52,44 +52,51 @@ class _MateriPageState extends State<MateriPage> {
           // Ambil dan tampilkan mata pelajaran dari Firestore
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: pengajarCollection.snapshots(),
+              stream: kontenCollection.snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+                  )
+                  );
                 }
 
-                if (!snapshot.hasData) {
-                  return const Center(child: Text('No data available'));
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text('Materi tidak ditemukan'));
                 }
 
                 final data = snapshot.data!.docs;
                 return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    // Ambil nama mata pelajaran 
-                    String subject = data[index]['mataPelajaran'];
+                    final String mataPelajaran =
+                        data[index]['mataPelajaran'] ?? '';
+                    final String lessonId = data[index]['lessonId'] ?? '';
 
-                    // Mengecek supaya tidak ada duplikasi mata pelajaran
-                    if (displayedMapel.contains(subject)) {
-                      return const SizedBox.shrink(); // Jika sudah ditampilkan, tidak tampilkan lagi
+                    // Cek duplikasi
+                    if (mataPelajaran.isEmpty ||
+                        displayedClasses.contains(mataPelajaran.toUpperCase())) {
+                      return const SizedBox.shrink();
                     }
 
-                    // Tambahkan mata pelajaran ke dalam set agar tidak duplikat
-                    displayedMapel.add(subject);
+                    displayedClasses.add(mataPelajaran.toUpperCase()); 
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 40),
                       child: GestureDetector(
                         onTap: () {
-                          // Kirim nama mata pelajaran ke halaman kelas
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const KelasPage(),
+                              builder: (context) => KelasPage(
+                                mataPelajaran: mataPelajaran,
+                                idlesson: lessonId,
+                              ),
                             ),
                           );
                         },
-                        child: _buildMateriBox(subject),
+                        child: _buildMateriBox(mataPelajaran),
                       ),
                     );
                   },
@@ -102,6 +109,7 @@ class _MateriPageState extends State<MateriPage> {
     );
   }
 
+  // Widget untuk membuat box mata pelajaran
   Widget _buildMateriBox(String subject) {
     return Container(
       width: 300,
@@ -116,7 +124,7 @@ class _MateriPageState extends State<MateriPage> {
           style: GoogleFonts.poppins(
             color: Colors.black,
             fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

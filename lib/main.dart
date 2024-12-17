@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:microlearning/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 Future<void> main() async {
-  WidgetsFlutterBinding
-      .ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
+  WidgetsFlutterBinding.ensureInitialized(); // Memastikan bahwa binding widget telah diinisialisasi
 
   // Inisialisasi Firebase
   try {
@@ -25,6 +25,8 @@ Future<void> main() async {
     print('Error initializing Firebase: $e');
   }
 
+  // Ubah timeago menjadi Bahasa Indonesia
+  timeago.setLocaleMessages('id', timeago.IdMessages()); 
   runApp(const MyApp()); // Jalankan aplikasi utama
 }
 
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
             useMaterial3: true,
           ),
-          home: const LoginForm(), // Ganti dengan halaman utama aplikasi Anda
+          home: const LoginForm(), // Halaman Utama Aplikasi 
           debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
         );
       }  

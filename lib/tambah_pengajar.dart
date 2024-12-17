@@ -15,10 +15,11 @@ class TambahPengajarState extends State<TambahPengajar> {
   String? selectedKelas;
 
   final List<String> daftarPelajaran = [
-    'Matematika',
-    'Bahasa Indonesia',
-    'Biologi',
-    'Fisika',
+    'MATEMATIKA',
+    'BAHASA INDONESIA',
+    'BIOLOGI',
+    'FISIKA',
+    'PKN',
   ];
 
   final List<String> daftarKelas = [
@@ -54,7 +55,7 @@ class TambahPengajarState extends State<TambahPengajar> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Silakan lengkapi semua pilihan')),
+        const SnackBar(content: Text('Silahkan lengkapi semua pilihan')),
       );
     }
   }

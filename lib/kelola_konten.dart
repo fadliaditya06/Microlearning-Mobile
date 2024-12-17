@@ -36,7 +36,10 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
         future: fetchLessons(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+            )
+            );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
@@ -66,9 +69,9 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
                   ),
                   child: Center(
                     child: Text(
-                      'Kelola Konten Pelajaran',
+                      'Kelola Konten',
                       style: GoogleFonts.poppins(
-                        fontSize: 21,
+                        fontSize: 25,
                         color: Colors.black,
                       ),
                       overflow: TextOverflow.ellipsis,

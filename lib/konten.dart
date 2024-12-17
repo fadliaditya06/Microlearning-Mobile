@@ -1,408 +1,628 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
-class ContentPage extends StatefulWidget {
-  const ContentPage({super.key});
+class KontenPelajaranPage extends StatefulWidget {
+  const KontenPelajaranPage({super.key, required this.subabId});
+
+  final String subabId;
 
   @override
-  State<ContentPage> createState() => _ContentPageState();
+  _KontenPelajaranPageState createState() => _KontenPelajaranPageState();
 }
 
-class _ContentPageState extends State<ContentPage> {
+class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
+  late String currentUserId;
+  String? imageUrl;
+  String? name;
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
 
-  final Map<String, String> subjectData = {
-    'mataPelajaran': 'Biologi',
-    'kelas': 'Kelas 10',
-    'guru': 'Stupen S. Pd',
-    'judulMateri': 'Genetika',
-  };
+  final TextEditingController _komentarController = TextEditingController();
+  late Future<DocumentSnapshot> _kontenFuture;
 
-  //Contoh forum diskusi
-  final List<Map<String, String>> discussionData = [
-    {
-      'nama': 'Murid 1',
-      'komentar': 'Lorem ipsum',
-      'avatar': 'assets/avatar1.png'
-    },
-    {
-      'nama': 'Murid 2',
-      'komentar': 'Lorem ipsum',
-      'avatar': 'assets/avatar2.png'
-    },
-    {
-      'nama': 'Guru 1',
-      'komentar': 'Lorem ipsum',
-      'avatar': 'assets/avatar3.png'
-    },
-  ];
+  @override
+  void dispose() {
+    _komentarController.dispose();
+    super.dispose();
+  }
 
-  final TextEditingController _commentController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _kontenFuture = FirebaseFirestore.instance
+        .collection('konten')
+        .doc(widget.subabId)
+        .get();
+    _checkAuthentication();
+  }
 
-  // Video YouTube
-  final YoutubePlayerController _youtubeController = YoutubePlayerController(
-    initialVideoId: YoutubePlayer.convertUrlToId(
-      'https://www.youtube.com/watch?v=pRLzqHAWTcs&t=101s',
-    )!,
-    flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
-  );
+  Future<void> _checkAuthentication() async {
+    User? user = FirebaseAuth.instance.currentUser;
 
-  // PDF path (untuk sementara lokal)
-  final String pdfPath =
-      'assets/pdf/BIOLOGI-PB4.pdf'; // Ganti dengan path PDF yang sesuai
-
-  // Menambahkan komentar baru
-  void _addComment() {
-    if (_commentController.text.isNotEmpty) {
-      setState(() {
-        discussionData.add({
-          'nama': 'User Baru',
-          'komentar': _commentController.text,
-          'avatar': 'assets/avatar_new.png',
-        });
-      });
-      _commentController.clear();
+    if (user != null) {
+      currentUserId = user.uid;
+      await _loadUserProfile();
     }
   }
 
-  // Menghapus komentar
-  void _deleteComment(int index) {
-    setState(() {
-      discussionData.removeAt(index);
-    });
+  Future<void> _loadUserProfile() async {
+    try {
+      DocumentSnapshot userDoc = await userCollection.doc(currentUserId).get();
+      if (userDoc.exists) {
+        setState(() {
+          name = userDoc['name'] as String?;
+          imageUrl = userDoc['profile_image'] as String?;
+        });
+      }
+    } catch (e) {
+      print('Error loading user profile: $e');
+    }
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-    });
+  void _tambahKomentar() {
+    if (_komentarController.text.isNotEmpty) {
+      String userName = name ?? 'Anonim';
+      String userImage = imageUrl ??
+          'https://www.example.com/default-avatar.png'; // Foto profil default
+      FirebaseFirestore.instance.collection('komentar').add({
+        'subabId': widget.subabId,
+        'komentar': _komentarController.text,
+        'name': userName,
+        'profile_image': userImage,
+        'uid': FirebaseAuth.instance.currentUser?.uid, // Menyimpan UID pengguna
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      _komentarController.clear();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-        children: <Widget>[
-            // Header setengah lingkaran kuning
-            Container(
-              height: 150,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFFD55),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(150),
-                  bottomRight: Radius.circular(150),
-                ),
-              ),
-              child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                const Spacer(),
-                // Memastikan teks berada di tengah
-                Padding(
-                  padding: const EdgeInsets.only(right: 70.0), 
-                  child: Text(
-                    'Konten Pelajaran',
-                    style: GoogleFonts.poppins(
-                      fontSize: 25, 
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const Spacer(), // Tambahkan spacer untuk menjaga keseimbangan
-              ],
-            ),
-          ),
+      body: FutureBuilder<DocumentSnapshot>(
+        future: _kontenFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+              )
+            );
+          }
 
-            // Konten utama untuk detail pelajaran
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    subjectData['mataPelajaran']!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    subjectData['kelas']!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    subjectData['guru']!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const Divider(color: Colors.yellow, thickness: 1.5),
-                  const SizedBox(height: 8),
-                  Text(
-                    subjectData['judulMateri']!,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
 
-            // PDF Viewer 
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // PDF Viewer
-                  SizedBox(
-                    height: 300,
-                    child: SfPdfViewer.asset(pdfPath),
-                  ),
-                  const SizedBox(height: 16),
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text("Data tidak ditemukan"));
+          }
 
-                  // Informasi PDF (Nama, Ukuran, dan Tombol Download)
-                  Container(
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset:
-                              const Offset(0, 3), // posisi bayangan
+          final data = snapshot.data!.data() as Map<String, dynamic>;
+          final String judulSubBab = data['judulSubBab'] ?? '';
+          final String mataPelajaranUpperCase = data['mataPelajaran'] ?? '';
+          final String namaGuru = data['namaGuru'] ?? '';
+          final String kelas = data['kelas'] ?? '';
+          final String pdfUrl = data['pdfUrl'] ?? '';
+          final String linkVideo = data['linkVideo'] ?? '';
+
+          String? videoId;
+          if (linkVideo.isNotEmpty) {
+            videoId = YoutubePlayer.convertUrlToId(linkVideo);
+          }
+
+          return Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Header
+                    Container(
+                      height: 150,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFFFFD55),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(150),
+                          bottomRight: Radius.circular(150),
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        // Informasi Nama PDF dan Ukuran
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Materi Genetika.pdf',
+                      ),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30.0),
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back,
+                                  color: Colors.black, size: 25),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                          const Spacer(),
+                          // Menampilkan judulSubBab di tengah
+                          Padding(
+                            padding: const EdgeInsets.only(right: 70.0),
+                            child: Center(
+                              child: Text(
+                                judulSubBab,
                                 style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                  fontSize: 25,
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '12 Halaman • 0.97 MB • PDF',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            mataPelajaranUpperCase,
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            kelas,
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            namaGuru,
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
+                      ),
+                    ),
+                    const Divider(color: Colors.yellow, thickness: 1.5),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 16.0),
+                      child: Text(
+                        judulSubBab,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    // Materi PDF
+                    if (pdfUrl.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          height: 300,
+                          child: SfPdfViewer.network(
+                            pdfUrl,
                           ),
                         ),
-                        // Tombol Download PDF
-                        IconButton(
-                          icon: const Icon(Icons.download,
-                              color: Colors.blueAccent),
-                          onPressed: () {
-                            // Tambahkan aksi untuk mengunduh PDF di sini
-                            print('Download PDF');
+                      ),
+                    const SizedBox(height: 10),
+                    // Tombol buka PDF
+                    if (pdfUrl.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PdfViewerPage(pdfUrl: pdfUrl),
+                              ),
+                            );
                           },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 15.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(12.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.picture_as_pdf,
+                                  color: Colors.redAccent,
+                                  size: 30,
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Text(
+                                    "Materi $judulSubBab.pdf",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(Icons.download, size: 25),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 40),
+                    // YouTube Player
+                    if (videoId != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: YoutubePlayer(
+                          controller: YoutubePlayerController(
+                            initialVideoId: videoId,
+                            flags: const YoutubePlayerFlags(autoPlay: false),
+                          ),
+                          showVideoProgressIndicator: true,
+                        ),
+                      ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                            'Video Materi $judulSubBab',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 50),
-
-            // YouTube Video Player
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  YoutubePlayer(
-                    controller: _youtubeController,
-                    showVideoProgressIndicator: true,
-                    onReady: () => print('Player is ready.'),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Sejarah Genetika',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Divider(
-                    color: Colors.yellow,
-                    thickness: 1.5, // Ketebalan garis
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Forum Diskusi
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF13ADDE)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Forum Diskusi',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
                     ),
                     const SizedBox(height: 8),
                     const Divider(
-                      color: Colors.blue,
-                      thickness: 1,
+                      color: Colors.yellow,
+                      thickness: 1.5,
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: discussionData.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Baris pertama: Avatar, Nama, dan Tombol Hapus
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  // Avatar
-                                  CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                        discussionData[index]['avatar']!),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  // Nama Pengguna
-                                  Expanded(
+                    const SizedBox(height: 16),
+                    // Forum Diskusi
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color(0xFF13ADDE)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Forum Diskusi',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
+                            ),
+                            const SizedBox(height: 8),
+                            const Divider(
+                              color: Colors.blue,
+                              thickness: 1,
+                            ),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('komentar')
+                                  .where('subabId', isEqualTo: widget.subabId)
+                                  .orderBy('timestamp', descending: false)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+                                      )
+                                  );
+                                }
+                                if (snapshot.hasError) {
+                                  return const Center(
                                     child: Text(
-                                      discussionData[index]['nama']!,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
+                                        'Terjadi kesalahan. Silakan coba lagi.'),
+                                  );
+                                }
+                                if (!snapshot.hasData ||
+                                    snapshot.data!.docs.isEmpty) {
+                                  return const Center(
+                                      child: Padding(
+                                    padding: EdgeInsets.only(top: 20),
+                                    child: Text(
+                                      'Belum ada komentar.',
+                                    ),
+                                  ));
+                                }
+
+                                return SizedBox(
+                                  height:
+                                      300, 
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder: (context, index) {
+                                      var komentar = snapshot.data!.docs[index];
+                                      String komentarUid = komentar['uid'];
+                                      return FutureBuilder<DocumentSnapshot>(
+                                        future: FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(komentarUid)
+                                            .get(),
+                                        builder: (context, userSnapshot) {
+                                          if (userSnapshot.connectionState == ConnectionState.waiting) {
+                                          }
+                                          if (userSnapshot.hasError) {
+                                            return const Center(
+                                                child: Text(
+                                                    'Gagal mengambil data pengguna.'));
+                                          }
+                                          // Memeriksa data pengguna 
+                                          var userData = userSnapshot.data
+                                              ?.data() as Map<String, dynamic>?;
+
+                                          String name =
+                                              userData?['name'] ?? 'Anonim';
+                                          String userImage =
+                                              userData?['profile_image'] ??
+                                                  ''; // Kosong jika tidak ada
+                                          var timestamp = komentar['timestamp'];
+                                          DateTime? dateTime;
+                                          if (timestamp != null) {
+                                            dateTime = timestamp.toDate();
+                                          }
+                                          var timeAgo = dateTime != null
+                                              ? timeago.format(dateTime,
+                                                  locale: 'id')
+                                              : "Waktu tidak tersedia";
+
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 2,
+                                                    blurRadius: 5,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundImage: userImage
+                                                          .isNotEmpty
+                                                      ? NetworkImage(userImage)
+                                                      : const AssetImage(
+                                                              'assets/images/default_avatar.png')
+                                                          as ImageProvider, // Jika profil nya kosong
+                                                ),
+                                                title: Text(
+                                                  komentar['name'] ?? name,
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      komentar['komentar'] ?? '',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 12),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      'Dikirim $timeAgo',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                trailing: FirebaseAuth.instance
+                                                            .currentUser?.uid ==
+                                                        komentar['uid']
+                                                    ? IconButton(
+                                                        icon: const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.red),
+                                                        onPressed: () async {
+                                                          bool? confirmDelete =
+                                                              await showDialog<
+                                                                  bool>(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                title: const Text(
+                                                                    'Konfirmasi Hapus'),
+                                                                content: const Text(
+                                                                    'Apakah Anda yakin ingin menghapus komentar ini?'),
+                                                                actions: [
+                                                                  TextButton(
+                                                                    onPressed: () =>
+                                                                        Navigator.pop(
+                                                                            context,
+                                                                            false),
+                                                                    child: const Text(
+                                                                        'Batal',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black)),
+                                                                  ),
+                                                                  TextButton(
+                                                                    onPressed: () =>
+                                                                        Navigator.pop(
+                                                                            context,
+                                                                            true),
+                                                                    child: const Text(
+                                                                        'Hapus',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black)),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          );
+
+                                                          if (confirmDelete ==
+                                                              true) {
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'komentar')
+                                                                .doc(
+                                                                    komentar.id)
+                                                                .delete();
+                                                          }
+                                                        },
+                                                      )
+                                                    : null,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    style: const TextStyle(fontSize: 14),
+                                    controller: _komentarController,
+                                    cursorColor: const Color(0xFF13ADDE),
+                                    decoration: InputDecoration(
+                                      hintText: 'Tambah Komentar',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFF13ADDE),
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFF13ADDE),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFF13ADDE),
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 14,
+                                      ),
+                                      suffixIcon: IconButton(
+                                        icon: const Icon(Icons.send,
+                                            color: Colors.blueAccent),
+                                        onPressed: () async {
+                                          if (_komentarController.text
+                                              .trim()
+                                              .isEmpty) return;
+                                          await FirebaseFirestore.instance
+                                              .collection('komentar')
+                                              .add({
+                                            'subabId': widget.subabId,
+                                            'name': name,
+                                            'komentar':
+                                                _komentarController.text.trim(),
+                                            'uid': FirebaseAuth
+                                                .instance
+                                                .currentUser
+                                                ?.uid, // Tambahkan UID pengguna yang mengirim komentar
+                                            'timestamp':
+                                                FieldValue.serverTimestamp(),
+                                          });
+
+                                          _komentarController.clear();
+                                        },
                                       ),
                                     ),
                                   ),
-                                  // Tombol Hapus
-                                  IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                    onPressed: () => _deleteComment(index),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4), // Spasi antar baris
-                              // Baris kedua: Komentar Pengguna
-                              Text(
-                                discussionData[index]['komentar']!,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  color: Colors.black,
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _commentController,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: Colors.black,
+                              ],
                             ),
-                            decoration: InputDecoration(
-                              hintText: 'Tambah Komentar',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF13ADDE),
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF13ADDE),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF13ADDE),
-                                  width: 2.0,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.send,
-                                    color: Colors.blueAccent),
-                                onPressed: _addComment,
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+            ],
+          );
+        },
       ),
+    );
+  }
+}
+
+// Halaman untuk menampilkan PDF
+class PdfViewerPage extends StatelessWidget {
+  const PdfViewerPage({super.key, required this.pdfUrl});
+
+  final String pdfUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PDF Viewer')),
+      body: SfPdfViewer.network(pdfUrl),
     );
   }
 }
