@@ -151,6 +151,7 @@ class LoginFormState extends State<LoginForm> {
                     // Form Input Email
                     TextFormField(
                       controller: emailController,
+                      cursorColor: const Color(0xFF13ADDE),
                       decoration: InputDecoration(
                         labelText: "Email",
                         labelStyle: const TextStyle(
@@ -188,6 +189,7 @@ class LoginFormState extends State<LoginForm> {
                     // Form Input Password
                     TextFormField(
                       controller: passwordController,
+                      cursorColor: const Color(0xFF13ADDE),
                       obscureText: _isObscure,
                       decoration: InputDecoration(
                         labelText: "Password",
