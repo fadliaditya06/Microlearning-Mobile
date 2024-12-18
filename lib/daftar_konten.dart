@@ -21,8 +21,8 @@ class DaftarKonten extends StatelessWidget {
 
       // Ubah data konten menjadi List Map
       return kontenSnapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id; // Tambahkan ID dokumen
+        final data = doc.data();
+        data['id'] = doc.id;
         return data;
       }).toList();
     } catch (e) {
@@ -31,8 +31,30 @@ class DaftarKonten extends StatelessWidget {
     }
   }
 
+  Future<void> deleteContent(BuildContext context, String id) async {
+    try {
+      // Hapus dokumen dari Firestore
+      await _firestore.collection('konten').doc(id).delete();
+
+      // Tampilkan Snackbar untuk pemberitahuan berhasil
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data konten berhasil dihapus')),
+      );
+
+      // Kembali ke halaman sebelumnya
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error deleting content: $e');
+
+      // Tampilkan Snackbar untuk pemberitahuan gagal
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal menghapus konten')),
+      );
+    }
+  }
+
   // Membuat card untuk setiap konten
-  Widget buildContentCard(BuildContext context, Map<String, dynamic> content) {
+  Widget buildContentCard(BuildContext scaffoldContext, Map<String, dynamic> content) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -61,7 +83,7 @@ class DaftarKonten extends StatelessWidget {
                           size: 22, color: Color(0xFF13ADDE)),
                       onPressed: () {
                         Navigator.push(
-                          context,
+                          scaffoldContext,
                           MaterialPageRoute(
                             builder: (context) => const EditKonten(),
                           ),
@@ -71,7 +93,36 @@ class DaftarKonten extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () {
-                        print('Delete content: ${content['judulSubBab']}');
+                        showDialog(
+                          context: scaffoldContext,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Konfirmasi Hapus'),
+                              content: const Text(
+                                  'Apakah Anda yakin ingin menghapus data konten ini?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text(
+                                    'Batal',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    deleteContent(
+                                        scaffoldContext, content['id']);
+                                  },
+                                  child: const Text(
+                                    'Hapus',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                     ),
                   ],
@@ -105,6 +156,8 @@ class DaftarKonten extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldContext = context; 
+
     return Scaffold(
       body: Column(
         children: [
@@ -132,11 +185,11 @@ class DaftarKonten extends StatelessWidget {
                 ),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
                     child: Text(
-                      'Kelola Konten Pelajaran',
+                      'Kelola Konten',
                       style: GoogleFonts.poppins(
-                        fontSize: 21,
+                        fontSize: 25,
                         color: Colors.black,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -151,7 +204,11 @@ class DaftarKonten extends StatelessWidget {
             future: fetchKonten(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const Center(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+                      )
+                    );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
@@ -176,7 +233,7 @@ class DaftarKonten extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: konten.length,
                   itemBuilder: (context, index) {
-                    return buildContentCard(context, konten[index]);
+                    return buildContentCard(scaffoldContext, konten[index]);
                   },
                 ),
               );
