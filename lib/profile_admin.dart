@@ -209,6 +209,11 @@ class ProfileAdminState extends State<ProfileAdmin> {
         },
         child: const CircleAvatar(
           radius: 100,
+          child: Icon(
+            Icons.camera_alt_outlined,
+            size: 50,
+            color: Colors.black,
+          ),
         ),
       );
     }
