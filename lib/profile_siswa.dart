@@ -212,10 +212,6 @@ class ProfileSiswaState extends State<ProfileSiswa> {
         },
         child: const CircleAvatar(
           radius: 100,
-          child: Icon(
-            Icons.camera_alt,
-            size: 50,
-          ),
         ),
       );
     }
@@ -247,11 +243,11 @@ class ProfileSiswaState extends State<ProfileSiswa> {
             bottom: 0,
             right: 0,
             child: CircleAvatar(
-              radius: 20,
+              radius: 25,
               backgroundColor: Color(0xFFFFFD55),
               child: Icon(
-                Icons.edit,
-                size: 24,
+                Icons.camera_alt_outlined,
+                size: 25,
                 color: Colors.black,
               ),
             ),
