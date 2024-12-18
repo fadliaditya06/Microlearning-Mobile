@@ -99,7 +99,7 @@ class TambahKontenState extends State<TambahKonten> {
                     child: Text(
                       'Tambah Konten',
                       style: GoogleFonts.poppins(fontSize: 25),
-                      overflow: TextOverflow.ellipsis, 
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -144,7 +144,7 @@ class TambahKontenState extends State<TambahKonten> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Silakan masukkan judul sub bab';
+                          return 'Silahkan masukkan judul sub bab';
                         }
                         return null;
                       },
@@ -177,8 +177,8 @@ class TambahKontenState extends State<TambahKonten> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.upload, color: Colors.black, size: 25), 
-                                const SizedBox(width: 10), 
+                                const Icon(Icons.upload, color: Colors.black, size: 25),
+                                const SizedBox(width: 10),
                                 Text(
                                   'Input Materi PDF',
                                   style: GoogleFonts.poppins(
@@ -200,7 +200,6 @@ class TambahKontenState extends State<TambahKonten> {
                       ],
                     ),
                     const SizedBox(height: 30),
-
                     // Link YouTube Video
                     Text(
                       'Video',
@@ -236,10 +235,27 @@ class TambahKontenState extends State<TambahKonten> {
                             pdfBytes == null) {
                           return 'Silahkan masukkan link video YouTube';
                         }
+                        if (value != null && value.isNotEmpty) {
+                          final youtubeRegex = RegExp(
+                            r'^(https?\:\/\/)?(www\.youtube\.com|youtu\.be)\/.+$',
+                            caseSensitive: false,
+                          );
+                          if (!youtubeRegex.hasMatch(value)) {
+                            return 'Link video Youtube tidak valid';
+                          }
+                        }
                         return null;
                       },
                       onChanged: (value) {
-                        videoUrl = value;
+                        final youtubeRegex = RegExp(
+                          r'^(https?\:\/\/)?(www\.youtube\.com|youtu\.be)\/.+$',
+                          caseSensitive: false,
+                        );
+                        if (youtubeRegex.hasMatch(value)) {
+                          videoUrl = value; 
+                        } else {
+                          videoUrl = null; 
+                        }
                       },
                     ),
                     const SizedBox(height: 50),
@@ -260,6 +276,15 @@ class TambahKontenState extends State<TambahKonten> {
                             ? null
                             : () async {
                                 if (_formKey.currentState!.validate()) {
+                                  if (pdfBytes == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Silahkan input file PDF terlebih dahulu'),
+                                      ),
+                                    );
+                                    return;
+                                  }
                                   setState(() {
                                     _isSaving = true;
                                   });
@@ -296,12 +321,20 @@ class TambahKontenState extends State<TambahKonten> {
   Future<void> _pickPdfFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      allowedExtensions: ['pdf'], // Hanya file dengan format PDF
       withData: true,
     );
 
     if (result != null) {
       final platformFile = result.files.single;
+      if (platformFile.extension != 'pdf') {
+        // Validasi file jika bukan format PDF
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('File yang dipilih bukan PDF')),
+        );
+        return;
+      }
+
       setState(() {
         pdfFileName = platformFile.name;
         pdfBytes = platformFile.bytes;
@@ -327,7 +360,7 @@ class TambahKontenState extends State<TambahKonten> {
 
       String? pdfUrl;
 
-      // Upload file PDF ke Firebase Storage jika ada
+      // Upload file PDF ke Firebase Storage
       if (pdfBytes != null) {
         final storageRef = FirebaseStorage.instance
             .ref()
@@ -336,7 +369,7 @@ class TambahKontenState extends State<TambahKonten> {
         pdfUrl = await uploadTask.ref.getDownloadURL();
       }
 
-      // Konversi mataPelajaran menjadi huruf besar semua
+      // Konversi mataPelajaran menjadi huruf besar 
       final mataPelajaranUpperCase = mataPelajaran?.toUpperCase();
 
       // Simpan data ke Firestore dengan userId dan data tambahan
