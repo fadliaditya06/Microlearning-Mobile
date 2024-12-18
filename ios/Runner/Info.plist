@@ -51,5 +51,12 @@
     <string>Aplikasi ini memerlukan akses ke kamera untuk mengambil foto profil Anda.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Aplikasi ini memerlukan akses ke galeri foto untuk memilih foto profil Anda.</string>
+
+    <!-- membuat fitur url_launcher-->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    <string>sms</string>
+    <string>tel</string>
+    </array>
 </dict>
 </plist>

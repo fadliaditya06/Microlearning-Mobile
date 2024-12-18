@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'materi_page.dart';
 import 'quiz_page.dart';
 import 'profile_siswa.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudentPage extends StatefulWidget {
   const StudentPage({super.key});
