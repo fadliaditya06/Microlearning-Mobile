@@ -23,7 +23,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
         return AlertDialog(
           title: const Text('Konfirmasi Hapus'),
           content:
-              const Text('Apakah Anda yakin ingin menghapus data user ini?'),
+              const Text('Apakah Anda yakin ingin menghapus data pengguna ini?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
