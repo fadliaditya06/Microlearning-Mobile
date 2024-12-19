@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class TambahPengajar extends StatefulWidget {
   const TambahPengajar({super.key});
@@ -29,23 +30,42 @@ class TambahPengajarState extends State<TambahPengajar> {
   ];
 
   Future<void> simpanData() async {
-    if (selectedTeacher != null &&
-        selectedSubject != null &&
-        selectedKelas != null) {
+    if (selectedTeacher != null && selectedSubject != null && selectedKelas != null) {
       try {
-        await FirebaseFirestore.instance.collection('pengajar').add({
-          'namaGuru': selectedTeacher,
-          'mataPelajaran': selectedSubject,
-          'kelas': selectedKelas,
-        });
+        // Ambil UID pengguna yang sedang login 
+        User? user = FirebaseAuth.instance.currentUser;
+        String? uid = user?.uid;
 
-        if (!mounted) return;
+        if (uid != null && selectedTeacher != null) {
+          // Cari UID guru 
+          QuerySnapshot<Map<String, dynamic>> teacherSnapshot = await FirebaseFirestore.instance
+              .collection('users')
+              .where('name', isEqualTo: selectedTeacher)
+              .where('role', isEqualTo: 'Teacher') 
+              .get();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Data berhasil disimpan')),
-        );
+          if (teacherSnapshot.docs.isNotEmpty) {
+            String teacherUid = teacherSnapshot.docs.first.id;
+            await FirebaseFirestore.instance.collection('pengajar').add({
+              'namaGuru': selectedTeacher,
+              'mataPelajaran': selectedSubject,
+              'kelas': selectedKelas,
+              'uidGuru': teacherUid, // Menambahkan UID guru
+            });
 
-        Navigator.pop(context); // Kembali ke halaman sebelumnya
+            if (!mounted) return;
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Data berhasil disimpan')),
+            );
+
+            Navigator.pop(context); 
+          } else {
+            throw Exception("Guru tidak ditemukan");
+          }
+        } else {
+          throw Exception("UID guru tidak ditemukan");
+        }
       } catch (e) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -257,8 +277,7 @@ class TambahPengajarState extends State<TambahPengajar> {
                             backgroundColor: Colors.blue,
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20), // Atur radius sudut di sini
+                              borderRadius: BorderRadius.circular(20), 
                             ),
                           ),
                           child: Text(

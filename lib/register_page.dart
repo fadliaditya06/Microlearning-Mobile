@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -59,7 +60,7 @@ class RegisterState extends State<RegisterPage> {
                 const SizedBox(width: 10),
                 Flexible(
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
+                    padding: const EdgeInsets.only(right: 20),
                     child: Text(
                       'Tambah Pengguna',
                       style: GoogleFonts.poppins(fontSize: 25),
@@ -142,6 +143,7 @@ class RegisterState extends State<RegisterPage> {
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -162,7 +164,10 @@ class RegisterState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Silakan masukkan email Anda';
+                          return 'Silahkan masukkan email';
+                        }
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Format email tidak valid';  // Validasi format email
                         }
                         return null;
                       },
@@ -196,7 +201,7 @@ class RegisterState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Silakan masukkan nama Anda';
+                          return 'Silahkan masukkan nama';
                         }
                         return null;
                       },
@@ -210,6 +215,8 @@ class RegisterState extends State<RegisterPage> {
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: roleIdController,
+                      keyboardType: TextInputType.number, // Memastikan data yg di input hanya berupa angka
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -231,7 +238,7 @@ class RegisterState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Silakan masukkan ${role == 'Student' ? 'NISN' : 'NIP'} Anda';
+                          return 'Silahkan masukkan ${role == 'Student' ? 'NISN' : 'NIP'}';
                         }
                         return null;
                       },
@@ -282,7 +289,7 @@ class RegisterState extends State<RegisterPage> {
                             ),
                             validator: (value) {
                               if (value == null) {
-                                return 'Silakan pilih kelas Anda';
+                                return 'Silahkan pilih kelas';
                               }
                               return null;
                             },
@@ -372,7 +379,7 @@ class RegisterState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Silakan masukkan password Anda';
+                          return 'Silahkan masukkan password';
                         }
                         return null;
                       },
@@ -468,10 +475,10 @@ class RegisterState extends State<RegisterPage> {
           'password': password,
           'gender': _selectedGender,
           if (role == 'Student')
-            'nisn': roleIdController.text, // Menyimpan NISN jika Student
+            'nisn': roleIdController.text, // Menyimpan NISN jika Siswa
           if (role == 'Admin' || role == 'Teacher')
             'nip':
-                roleIdController.text, // Menyimpan NIP jika Admin atau Teacher
+                roleIdController.text, // Menyimpan NIP jika Admin atau Guru
           if (role == 'Student') 'kelas': selectedKelas, // Hanya untuk siswa
         });
 

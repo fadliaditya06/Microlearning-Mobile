@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'tambah_konten.dart';
 import 'daftar_konten.dart';
 
@@ -13,14 +14,26 @@ class KelolaKontenPage extends StatefulWidget {
 
 class KelolaKontenPageState extends State<KelolaKontenPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Fetch data dari Firestore
+  // Ambil data dari Firestore berdasarkan UID guru
   Future<List<Map<String, dynamic>>> fetchLessons() async {
     try {
-      QuerySnapshot snapshot = await _firestore.collection('pengajar').get();
+      User? user = _auth.currentUser;
+      if (user == null) {
+        throw 'User is not logged in';
+      }
+
+      String uid = user.uid;
+
+      QuerySnapshot snapshot = await _firestore
+          .collection('pengajar')
+          .where('uidGuru', isEqualTo: uid) // Filter berdasarkan UID Guru
+          .get();
+
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id; // Tambahkan ID dokumen ke data
+        data['id'] = doc.id;
         return data;
       }).toList();
     } catch (e) {
@@ -32,74 +45,82 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchLessons(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
-            )
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Error: ${snapshot.error}',
-                style: GoogleFonts.poppins(fontSize: 15, color: Colors.red),
+      body: Column(
+        children: [
+          // Header
+          Container(
+            height: 150,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFFFD55),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(150),
+                bottomRight: Radius.circular(150),
               ),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('Tidak ada data.', style: TextStyle(fontSize: 15)),
-            );
-          }
-
-          List<Map<String, dynamic>> lessons = snapshot.data!;
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                // Header
-                Container(
-                  height: 150,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFFFD55),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(150),
-                      bottomRight: Radius.circular(150),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Kelola Konten',
-                      style: GoogleFonts.poppins(
-                        fontSize: 25,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // Lesson Cards
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    children: lessons.map((lesson) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: buildLessonCard(
-                          lesson['mataPelajaran'] ?? 'Tidak Ada Mata Pelajaran',
-                          lesson['kelas'] ?? 'Tidak Ada Kelas',
-                          lesson['namaGuru'] ?? 'Tidak Ada Guru',
-                          lesson['id'], // Kirimkan ID dokumen
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
             ),
-          );
-        },
+            child: Center(
+              child: Text(
+                'Kelola Konten',
+                style: GoogleFonts.poppins(
+                  fontSize: 25,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+          const SizedBox(height: 40),
+          // FutureBuilder untuk data
+          Expanded(
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchLessons(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blue)));
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Error: ${snapshot.error}',
+                      style:
+                          GoogleFonts.poppins(fontSize: 15, color: Colors.red),
+                    ),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.only(bottom: 120),
+                    child: Center(
+                      child: Text('Tidak ada data.',
+                          style: TextStyle(fontSize: 17)),
+                    ),
+                  );
+                }
+
+                List<Map<String, dynamic>> lessons = snapshot.data!;
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      children: lessons.map((lesson) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: buildLessonCard(
+                            lesson['mataPelajaran'] ??
+                                'Tidak Ada Mata Pelajaran',
+                            lesson['kelas'] ?? 'Tidak Ada Kelas',
+                            lesson['namaGuru'] ?? 'Tidak Ada Guru',
+                            lesson['id'],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -109,7 +130,6 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
       String subject, String grade, String teacher, String lessonId) {
     return GestureDetector(
       onTap: () {
-        // Navigasi ke daftar konten berdasarkan lessonId
         Navigator.push(
           context,
           MaterialPageRoute(
