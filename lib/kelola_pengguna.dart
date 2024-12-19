@@ -54,7 +54,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
     try {
       await usersCollection.doc(id).delete();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data user berhasil dihapus')),
+        const SnackBar(content: Text('Data pengguna berhasil dihapus')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

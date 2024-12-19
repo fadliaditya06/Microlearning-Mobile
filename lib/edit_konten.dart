@@ -83,7 +83,7 @@ class EditKontenState extends State<EditKonten> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Konten berhasil diperbarui!')),
+        SnackBar(content: Text('Konten berhasil diperbarui')),
       );
 
       Navigator.pop(context);
