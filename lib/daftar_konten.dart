@@ -85,7 +85,12 @@ class DaftarKonten extends StatelessWidget {
                         Navigator.push(
                           scaffoldContext,
                           MaterialPageRoute(
-                            builder: (context) => const EditKonten(),
+                            builder: (context) => EditKonten(
+                              kontenId: content['id'],
+                              judulSubBab: content['judulSubBab'],
+                              pdfUrl: content['pdfUrl'],
+                              linkVideo: content['linkVideo'],
+                            ),
                           ),
                         );
                       },
@@ -156,7 +161,7 @@ class DaftarKonten extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scaffoldContext = context; 
+    final scaffoldContext = context;
 
     return Scaffold(
       body: Column(
@@ -207,8 +212,8 @@ class DaftarKonten extends StatelessWidget {
                 return const Center(
                     child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
-                      )
-                    );
+                        )
+                      );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
