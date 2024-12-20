@@ -57,8 +57,8 @@ class LoginFormState extends State<LoginForm> {
                     child: Container(
                       width: double.infinity,
                       margin:
-                          const EdgeInsets.only(left: 80, right: 80, top: 10),
-                      child: Image.asset('assets/images/logo-ulilalbab.png'),
+                          const EdgeInsets.only(left: 80, right: 80, top: 10, bottom: 10),
+                      child: Image.asset('assets/images/Logo-SMAIT.png'),
                     ),
                   ),
                 ],
