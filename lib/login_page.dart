@@ -56,9 +56,9 @@ class LoginFormState extends State<LoginForm> {
                   Center(
                     child: Container(
                       width: double.infinity,
-                      margin:
-                          const EdgeInsets.only(left: 80, right: 80, top: 10, bottom: 10),
-                      child: Image.asset('assets/images/Logo-SMAIT.png'),
+                      height: 90,
+                      margin: const EdgeInsets.only(left: 80, right: 80, top: 10, bottom: 10),
+                      child: Image.asset('assets/images/logo-ulilalbab.png'),
                     ),
                   ),
                 ],
@@ -70,7 +70,7 @@ class LoginFormState extends State<LoginForm> {
               height: 200,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/login.png'),
+                  image: AssetImage('assets/images/Logo-SMAIT.png'),
                   fit: BoxFit.contain,
                 ),
               ),

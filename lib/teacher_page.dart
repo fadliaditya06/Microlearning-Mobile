@@ -48,13 +48,13 @@ class TeacherPageState extends State<TeacherPage> {
               child: Stack(
                 children: <Widget>[
                   Align(
-                    alignment: const Alignment(-0.7, 0),
+                    alignment: const Alignment(-0.6, 0),
                     child: Container(
-                      width: 65,
-                      height: 65,
+                      width: 200,
+                      height: 200,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/images/Logo-SMAIT.png'),
+                          image: AssetImage('assets/images/logo-ulilalbab.png'),
                           fit: BoxFit.contain,
                         ),
                       ),
