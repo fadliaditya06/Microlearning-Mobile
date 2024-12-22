@@ -66,7 +66,7 @@ class LoginFormState extends State<LoginForm> {
             ),
             const SizedBox(height: 20),
             Container(
-              width: 500,
+              width: double.infinity,
               height: 200,
               decoration: const BoxDecoration(
                 image: DecorationImage(

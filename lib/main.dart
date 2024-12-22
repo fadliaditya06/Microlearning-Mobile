@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:microlearning/login_page.dart';
+import 'package:microlearning/launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -19,15 +19,14 @@ Future<void> main() async {
       ),
     );
     print(
-        'Firebase initialized successfully.'); // Konfirmasi inisialisasi berhasil
+        'Firebase initialized successfully.'); 
   } catch (e) {
-    // Penanganan kesalahan jika Firebase gagal diinisialisasi
     print('Error initializing Firebase: $e');
   }
 
   // Ubah timeago menjadi Bahasa Indonesia
   timeago.setLocaleMessages('id', timeago.IdMessages()); 
-  runApp(const MyApp()); // Jalankan aplikasi utama
+  runApp(const MyApp()); 
 }
 
 class MyApp extends StatelessWidget {
@@ -43,7 +42,7 @@ class MyApp extends StatelessWidget {
             textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
             useMaterial3: true,
           ),
-          home: const LoginForm(), // Halaman Utama Aplikasi 
+          home: const LauncherPage(), 
           debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
         );
       }  
