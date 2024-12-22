@@ -11,6 +11,7 @@ class TambahPengajar extends StatefulWidget {
 }
 
 class TambahPengajarState extends State<TambahPengajar> {
+  bool _isLoading = false;
   String? selectedTeacher;
   String? selectedSubject;
   String? selectedKelas;
@@ -30,19 +31,25 @@ class TambahPengajarState extends State<TambahPengajar> {
   ];
 
   Future<void> simpanData() async {
-    if (selectedTeacher != null && selectedSubject != null && selectedKelas != null) {
+    if (selectedTeacher != null &&
+        selectedSubject != null &&
+        selectedKelas != null) {
+      setState(() {
+        _isLoading = true;
+      });
       try {
-        // Ambil UID pengguna yang sedang login 
+        // Ambil UID pengguna yang sedang login
         User? user = FirebaseAuth.instance.currentUser;
         String? uid = user?.uid;
 
         if (uid != null && selectedTeacher != null) {
-          // Cari UID guru 
-          QuerySnapshot<Map<String, dynamic>> teacherSnapshot = await FirebaseFirestore.instance
-              .collection('users')
-              .where('name', isEqualTo: selectedTeacher)
-              .where('role', isEqualTo: 'Teacher') 
-              .get();
+          // Cari UID guru
+          QuerySnapshot<Map<String, dynamic>> teacherSnapshot =
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .where('name', isEqualTo: selectedTeacher)
+                  .where('role', isEqualTo: 'Teacher')
+                  .get();
 
           if (teacherSnapshot.docs.isNotEmpty) {
             String teacherUid = teacherSnapshot.docs.first.id;
@@ -59,7 +66,7 @@ class TambahPengajarState extends State<TambahPengajar> {
               const SnackBar(content: Text('Data berhasil disimpan')),
             );
 
-            Navigator.pop(context); 
+            Navigator.pop(context);
           } else {
             throw Exception("Guru tidak ditemukan");
           }
@@ -71,6 +78,10 @@ class TambahPengajarState extends State<TambahPengajar> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
         );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     } else {
       if (!mounted) return;
@@ -132,7 +143,7 @@ class TambahPengajarState extends State<TambahPengajar> {
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: Color(0xFF13ADDE)));
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -272,22 +283,26 @@ class TambahPengajarState extends State<TambahPengajar> {
                         width: double.infinity,
                         height: 70,
                         child: ElevatedButton(
-                          onPressed: simpanData,
+                          onPressed: _isLoading ? null : simpanData,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: const Color(0xFF13ADDE),
+                            disabledBackgroundColor: const Color(0xFF13ADDE),
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20), 
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          child: Text(
-                            "Simpan",
-                            style: GoogleFonts.poppins(
-                              color: Colors.black,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white)
+                              : Text(
+                                  "Simpan",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                       ),
                     ],

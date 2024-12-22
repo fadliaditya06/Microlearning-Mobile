@@ -129,7 +129,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -150,7 +150,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -173,7 +173,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                               builder: (context) => const RegisterPage()));
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: const Color(0xFF13ADDE),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -205,7 +205,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                   return const Center(child: Text("Terjadi kesalahan"));
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(color: Color(0xFF13ADDE)));
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -219,7 +219,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: DataTable(
-                      headingRowColor: WidgetStateProperty.all(Colors.blue),
+                      headingRowColor: WidgetStateProperty.all(const Color(0xFF13ADDE)),
                       columns: [
                         DataColumn(
                           label: Text(

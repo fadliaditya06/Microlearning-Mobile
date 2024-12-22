@@ -15,7 +15,7 @@ class RegisterState extends State<RegisterPage> {
   bool showProgress = false;
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
-
+  bool _isLoading = false;
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -93,7 +93,8 @@ class RegisterState extends State<RegisterPage> {
                           role = newValue!;
                         });
                       },
-                      items: options.map<DropdownMenuItem<String>>((String value) {
+                      items:
+                          options.map<DropdownMenuItem<String>>((String value) {
                         // Menampilkan dalam bahasa indonesia
                         String displayValue;
                         switch (value) {
@@ -160,14 +161,15 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Email',
-                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
+                        labelStyle:
+                            GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Silahkan masukkan email';
                         }
                         if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                          return 'Format email tidak valid';  // Validasi format email
+                          return 'Format email tidak valid'; // Validasi format email
                         }
                         return null;
                       },
@@ -197,7 +199,8 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Nama',
-                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
+                        labelStyle:
+                            GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -215,7 +218,8 @@ class RegisterState extends State<RegisterPage> {
                     const SizedBox(height: 5),
                     TextFormField(
                       controller: roleIdController,
-                      keyboardType: TextInputType.number, // Memastikan data yg di input hanya berupa angka
+                      keyboardType: TextInputType
+                          .number, // Memastikan data yg di input hanya berupa angka
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -234,7 +238,8 @@ class RegisterState extends State<RegisterPage> {
                         ),
                         labelText:
                             role == 'Student' ? 'Input NISN' : 'Input NIP',
-                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
+                        labelStyle:
+                            GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -285,7 +290,8 @@ class RegisterState extends State<RegisterPage> {
                                     color: Colors.blue, width: 1),
                               ),
                               labelText: 'Pilih Kelas',
-                              labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
+                              labelStyle: GoogleFonts.poppins(
+                                  color: const Color(0xFF000000)),
                             ),
                             validator: (value) {
                               if (value == null) {
@@ -363,7 +369,8 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Password',
-                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
+                        labelStyle:
+                            GoogleFonts.poppins(color: const Color(0xFF000000)),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isObscure
@@ -410,7 +417,8 @@ class RegisterState extends State<RegisterPage> {
                               const BorderSide(color: Colors.blue, width: 1),
                         ),
                         labelText: 'Input Konfirmasi Password',
-                        labelStyle: GoogleFonts.poppins(color: const Color(0xFF000000)),
+                        labelStyle:
+                            GoogleFonts.poppins(color: const Color(0xFF000000)),
                       ),
                       validator: (value) {
                         if (value != passwordController.text) {
@@ -426,23 +434,39 @@ class RegisterState extends State<RegisterPage> {
                       height: 70,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
+                          disabledBackgroundColor: const Color(0xFF13ADDE),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () async {
-                          await signUp(emailController.text,
-                              passwordController.text, role);
-                        },
-                        child: Text(
-                          "Simpan",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        onPressed: _isLoading
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isLoading = true; 
+                                });
+                                await signUp(
+                                  emailController.text,
+                                  passwordController.text,
+                                  role,
+                                );
+                                setState(() {
+                                  _isLoading = false; 
+                                });
+                              },
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                "Simpan",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -477,8 +501,7 @@ class RegisterState extends State<RegisterPage> {
           if (role == 'Student')
             'nisn': roleIdController.text, // Menyimpan NISN jika Siswa
           if (role == 'Admin' || role == 'Teacher')
-            'nip':
-                roleIdController.text, // Menyimpan NIP jika Admin atau Guru
+            'nip': roleIdController.text, // Menyimpan NIP jika Admin atau Guru
           if (role == 'Student') 'kelas': selectedKelas, // Hanya untuk siswa
         });
 

@@ -12,6 +12,7 @@ class EditPengajar extends StatefulWidget {
 
 class EditPengajarState extends State<EditPengajar> {
   late TextEditingController namaGuruController;
+  bool _isLoading = false;
   String? selectedMataPelajaran;
   String? selectedKelas;
 
@@ -203,44 +204,60 @@ class EditPengajarState extends State<EditPengajar> {
                       height: 70,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: const Color(0xFF13ADDE),
+                          disabledBackgroundColor: const Color(0xFF13ADDE),
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        onPressed: () async {
-                          Map<String, dynamic> dataToUpdate = {
-                            'mataPelajaran': selectedMataPelajaran,
-                            'kelas': selectedKelas,
-                          };
-                          try {
-                            await FirebaseFirestore.instance
-                                .collection('pengajar')
-                                .doc(widget.data['id'])
-                                .update(dataToUpdate);
+                        onPressed: _isLoading
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                Map<String, dynamic> dataToUpdate = {
+                                  'mataPelajaran': selectedMataPelajaran,
+                                  'kelas': selectedKelas,
+                                };
+                                try {
+                                  await FirebaseFirestore.instance
+                                      .collection('pengajar')
+                                      .doc(widget.data['id'])
+                                      .update(dataToUpdate);
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Data berhasil diperbarui!')),
-                            );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Data berhasil diperbarui!')),
+                                  );
 
-                            Navigator.pop(context);
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('Gagal menyimpan data: $e')),
-                            );
-                          }
-                        },
-                        child: Text(
-                          "Simpan Perubahan",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                                  Navigator.pop(context);
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('Gagal menyimpan data: $e')),
+                                  );
+                                } finally {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
+                              },
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                "Simpan Perubahan",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                   ],

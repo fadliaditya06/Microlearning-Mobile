@@ -119,7 +119,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: const Color(0xFF13ADDE),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -159,7 +159,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: DataTable(
-                      headingRowColor: WidgetStateProperty.all(Colors.blue),
+                      headingRowColor: WidgetStateProperty.all(const Color(0xFF13ADDE)),
                       columns: [
                         DataColumn(
                           label: Text(
@@ -235,7 +235,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                             children: [
                               IconButton(
                                 icon:
-                                    const Icon(Icons.edit, color: Colors.blue),
+                                    const Icon(Icons.edit, color: Color(0xFF13ADDE)),
                                 onPressed: () {
                                   var dataPengajar = {
                                     'id': doc.id,
