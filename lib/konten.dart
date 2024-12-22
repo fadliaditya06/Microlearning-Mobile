@@ -67,8 +67,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
   void _tambahKomentar() {
     if (_komentarController.text.isNotEmpty) {
       String userName = name ?? 'Anonim';
-      String userImage = imageUrl ??
-          'https://www.example.com/default-avatar.png'; // Foto profil default
+      String userImage = imageUrl ?? 'https://www.example.com/default-avatar.png'; 
       FirebaseFirestore.instance.collection('komentar').add({
         'subabId': widget.subabId,
         'komentar': _komentarController.text,
@@ -561,34 +560,15 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                           width: 2.0,
                                         ),
                                       ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 14,
-                                      ),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                                       suffixIcon: IconButton(
                                         icon: const Icon(Icons.send,
-                                            color: Colors.blueAccent),
+                                            color: Color(0xFF13ADDE)),
                                         onPressed: () async {
                                           if (_komentarController.text
                                               .trim()
                                               .isEmpty) return;
-                                          await FirebaseFirestore.instance
-                                              .collection('komentar')
-                                              .add({
-                                            'subabId': widget.subabId,
-                                            'name': name,
-                                            'komentar':
-                                                _komentarController.text.trim(),
-                                            'uid': FirebaseAuth
-                                                .instance
-                                                .currentUser
-                                                ?.uid, // Tambahkan UID pengguna yang mengirim komentar
-                                            'timestamp':
-                                                FieldValue.serverTimestamp(),
-                                          });
-
-                                          _komentarController.clear();
+                                              _tambahKomentar();
                                         },
                                       ),
                                     ),
