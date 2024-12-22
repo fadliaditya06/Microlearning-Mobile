@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EditKonten extends StatefulWidget {
   final String kontenId;
@@ -23,12 +24,13 @@ class EditKonten extends StatefulWidget {
 }
 
 class EditKontenState extends State<EditKonten> {
-  final _formKey = GlobalKey<FormState>(); 
+  final _formKey = GlobalKey<FormState>();
   bool showProgress = false;
   late TextEditingController subBabController;
   late TextEditingController linkvidioController;
   String? pdfUrl;
-  String? videoUrl; 
+  String? pdfFileName;
+  String? videoUrl;
 
   @override
   void initState() {
@@ -42,7 +44,7 @@ class EditKontenState extends State<EditKonten> {
   Future<void> _loadKontenData() async {
     try {
       DocumentSnapshot kontenSnapshot = await FirebaseFirestore.instance
-          .collection('konten') 
+          .collection('konten')
           .doc(widget.kontenId)
           .get();
 
@@ -51,8 +53,8 @@ class EditKontenState extends State<EditKonten> {
         setState(() {
           subBabController.text = kontenData['judulSubBab'] ?? '';
           linkvidioController.text = kontenData['linkVideo'] ?? '';
-          pdfUrl = kontenData['pdfUrl'];
-          videoUrl = kontenData['linkVideo']; 
+          pdfFileName = kontenData['pdfFileName'];
+          videoUrl = kontenData['linkVideo'];
         });
       }
     } catch (e) {
@@ -73,7 +75,7 @@ class EditKontenState extends State<EditKonten> {
           .update({
         'judulSubBab': subBabController.text,
         'linkVideo': videoUrl,
-        'pdfUrl': pdfUrl,
+        'pdfUrl': pdfUrl ?? widget.pdfUrl,
       });
 
       _loadKontenData();
@@ -99,31 +101,48 @@ class EditKontenState extends State<EditKonten> {
     }
   }
 
-  // Fungsi untuk mengunggah file PDF
   Future<void> _pickPDFfile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom, allowedExtensions: ['pdf'], withData: true);
+
     if (result != null) {
       var file = result.files.single;
 
-      // Unggah file PDF ke Firebase Storage
+      // Validasi file jika bukan format PDF
+    if (file.extension != 'pdf') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('File yang dipilih harus PDF')),
+      );
+      return; 
+    }
+
       try {
-        String pdfUrl = await FirebaseStorage.instance
-            .ref()
-            .child('pdfs/${file.name}')
+        String fileName = file.name;
+        // Upload file ke Firebase Storage
+        String newPdfUrl = await FirebaseStorage.instance
+            .ref('konten/${FirebaseAuth.instance.currentUser!.uid}/$fileName')
             .putData(file.bytes!)
             .then((snapshot) => snapshot.ref.getDownloadURL());
 
+        await FirebaseFirestore.instance
+            .collection('konten')
+            .doc(widget.kontenId)
+            .update({
+          'pdfUrl': newPdfUrl,
+          'pdfFileName': fileName,
+        });
+
         setState(() {
-          this.pdfUrl = pdfUrl; // Simpan URL file PDF yang telah diupload
+          pdfUrl = newPdfUrl;
+          pdfFileName = fileName;
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('File PDF berhasil diunggah')),
+          SnackBar(content: Text('File PDF berhasil diperbarui')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Terjadi kesalahan saat mengunggah PDF')),
+          SnackBar(content: Text('Terjadi kesalahan saat memperbarui PDF')),
         );
       }
     }
@@ -152,7 +171,7 @@ class EditKontenState extends State<EditKonten> {
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start, 
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -241,7 +260,7 @@ class EditKontenState extends State<EditKonten> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            onPressed: _pickPDFfile, 
+                            onPressed: _pickPDFfile,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -261,11 +280,11 @@ class EditKontenState extends State<EditKonten> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Text(
-                          pdfUrl ?? 'Tidak ada file PDF',
-                          style: GoogleFonts.poppins(fontSize: 14),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                          Text(
+                            pdfFileName ?? 'Tidak ada file PDF',
+                            style: GoogleFonts.poppins(fontSize: 14),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -314,9 +333,9 @@ class EditKontenState extends State<EditKonten> {
                           caseSensitive: false,
                         );
                         if (youtubeRegex.hasMatch(value)) {
-                          videoUrl = value; 
+                          videoUrl = value;
                         } else {
-                          videoUrl = null; 
+                          videoUrl = null;
                         }
                       },
                     ),

@@ -330,7 +330,7 @@ class TambahKontenState extends State<TambahKonten> {
       if (platformFile.extension != 'pdf') {
         // Validasi file jika bukan format PDF
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('File yang dipilih bukan PDF')),
+          const SnackBar(content: Text('File yang dipilih harus PDF')),
         );
         return;
       }
@@ -378,6 +378,7 @@ class TambahKontenState extends State<TambahKonten> {
         'lessonId': widget.lessonId,
         'judulSubBab': subBabController.text,
         'linkVideo': videoUrl,
+        'pdfFileName': pdfFileName,
         'pdfUrl': pdfUrl,
         'namaGuru': namaGuru, // Simpan nama guru
         'kelas': kelas, // Simpan kelas
