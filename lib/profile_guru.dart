@@ -1,4 +1,4 @@
-import 'dart:io' as io; // Untuk Android/iOS
+import 'dart:io' as io; 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart'; // Untuk kIsWeb
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
-import 'login_page.dart'; // Pastikan jalur ini benar
+import 'login_page.dart'; 
+import 'package:flutter/cupertino.dart';
 
 class UserModel {
   final String? id;
@@ -64,7 +65,7 @@ class ProfileGuru extends StatefulWidget {
 }
 
 class ProfileGuruState extends State<ProfileGuru> {
-  io.File? imageFile; // Untuk Android/iOS
+  io.File? imageFile; 
   Uint8List? imageBytes; // Untuk Web
   String? imageUrl;
   bool isLoading = false;
@@ -272,16 +273,16 @@ class ProfileGuruState extends State<ProfileGuru> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildUserInfoCard("Nama", userModel!.name),
-        _buildUserInfoCard("Email", userModel!.email),
-        _buildUserInfoCard("Jenis Kelamin", jkIndo),
-        _buildUserInfoCard("NIP", userModel!.nip),
-        _buildUserInfoCard("Password", userModel!.password, isPassword: true),
+        _buildUserInfoCard(const Icon(CupertinoIcons.person), "Nama", userModel!.name),
+        _buildUserInfoCard(const Icon(CupertinoIcons.mail), "Email", userModel!.email),
+        _buildUserInfoCard(const Icon(CupertinoIcons.person_2), "Jenis Kelamin", jkIndo),
+        _buildUserInfoCard(const Icon(Icons.badge_outlined), "NIP", userModel!.nip),
+        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, isPassword: true),
       ],
     );
   }
 
-  Widget _buildUserInfoCard(String title, String value,
+  Widget _buildUserInfoCard(Icon icon, String title, String value,
       {bool isPassword = false}) {
     return GestureDetector(
       onTap: () {
@@ -309,18 +310,22 @@ class ProfileGuruState extends State<ProfileGuru> {
           width: 360,
           height: 75,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              icon,
+              const SizedBox(width: 20),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                    child: Text(
                       title,
                       style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 15),
+                  ),
+                    const SizedBox(height: 5),
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
@@ -564,7 +569,7 @@ class ProfileGuruState extends State<ProfileGuru> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: const Color(0xFF13ADDE),
                     ),
                   ),
                   const SizedBox(height: 30),
