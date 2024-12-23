@@ -18,15 +18,14 @@ Future<void> main() async {
         storageBucket: "microlearning-ea3cc.appspot.com",
       ),
     );
-    print(
-        'Firebase initialized successfully.'); 
+    print('Firebase initialized successfully.');
   } catch (e) {
     print('Error initializing Firebase: $e');
   }
 
   // Ubah timeago menjadi Bahasa Indonesia
-  timeago.setLocaleMessages('id', timeago.IdMessages()); 
-  runApp(const MyApp()); 
+  timeago.setLocaleMessages('id', timeago.IdMessages());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -39,11 +38,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 40, 121, 128)),
-            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-            useMaterial3: true,
-          ),
-          home: const LauncherPage(), 
-          debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
-        );
-      }  
-    }
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+        useMaterial3: true,
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xFF13ADDE),
+          selectionColor: Color(0xFF13ADDE), 
+          selectionHandleColor: Color(0xFF13ADDE), 
+        ),
+      ),
+      home: const LauncherPage(),
+      debugShowCheckedModeBanner: false, // Menonaktifkan banner debug
+    );
+  }
+}
