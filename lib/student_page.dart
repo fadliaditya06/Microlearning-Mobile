@@ -165,10 +165,16 @@ class _HomeContentState extends State<HomeContent> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
-          const Center(
-            child: CircleAvatar(
-              radius: 100, // Logo size
-              backgroundImage: AssetImage('assets/images/ASET-PPDB.png'),
+          Center(
+            child: Container(
+              width: 200, 
+              height: 200, 
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/ASET-PPDB.png'),
+                  fit: BoxFit.cover, 
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -271,9 +277,9 @@ class _HomeContentState extends State<HomeContent> {
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(
                     image,
-                    height: 97, 
+                    height: 97,
                     width: 93,
-                    fit: BoxFit.cover, 
+                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(height: 8),
