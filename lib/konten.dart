@@ -265,7 +265,6 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                     ),
                                   ),
                                 ),
-                                const Icon(Icons.download, size: 25),
                               ],
                             ),
                           ),
