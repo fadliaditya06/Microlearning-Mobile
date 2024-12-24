@@ -431,9 +431,10 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                                 ),
                                                 title: Text(
                                                   komentar['name'] ?? name,
-                                                  style: GoogleFonts.poppins(
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
                                                   ),
                                                 ),
                                                 subtitle: Column(
@@ -442,9 +443,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                                   children: [
                                                     Text(
                                                       komentar['komentar'] ?? '',
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                              fontSize: 12),
+                                                      style: const TextStyle(fontSize: 12),
                                                     ),
                                                     const SizedBox(height: 4),
                                                     Text(
@@ -452,8 +451,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                                       style:
                                                           GoogleFonts.poppins(
                                                         fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w400,
+                                                        fontWeight: FontWeight.w400,
                                                         color: Colors.grey[600],
                                                       ),
                                                     ),

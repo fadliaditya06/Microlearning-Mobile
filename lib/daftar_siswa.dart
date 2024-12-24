@@ -59,32 +59,6 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
     }
   }
 
-  // Fungsi untuk memisahkan nama depan dan nama belakang
-  String _getFirstName(String name) {
-    var nameParts = name.split(' ');
-    return nameParts.isNotEmpty ? nameParts[0] : '';
-  }
-
-  String _getMiddleName(String name) {
-    var nameParts = name.split(' ');
-    if (nameParts.length > 1) {
-      return nameParts[1];
-    }
-    return '';
-  }
-
-  String _getLastNameInitial(String name) {
-    var nameParts = name.split(' ');
-    if (nameParts.length > 2) {
-      String initials = '';
-      for (int i = 2; i < nameParts.length; i++) {
-        initials += '${nameParts[i][0].toUpperCase()}. ';
-      }
-      return initials.trim();
-    }
-    return '';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,9 +89,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
             // Search Bar
             Align(
               alignment: Alignment.centerRight,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 38, vertical: 10),
+              child: Padding(padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 10),
                 child: SizedBox(
                   width: 180,
                   height: 40,
@@ -147,13 +119,13 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                       child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.blue)));
-                }
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+                          )
+                        );
+                      }
 
                 // Jika data kosong atau tidak ada hasil pencarian
-                if (!snapshot.hasData ||
-                    _filterSearchResults(snapshot.data!.docs).isEmpty) {
+                if (!snapshot.hasData || _filterSearchResults(snapshot.data!.docs).isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Text(
@@ -201,25 +173,25 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Container(
                                   width: 1,
-                                  height: 80,
+                                  height: 90,
                                   color: Colors.black,
                                 ),
                               ),
                               const SizedBox(width: 5),
-                              // Data Profil Siswa 
+                              // Data Profil Siswa
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Nama: ${_getFirstName(data['name'] ?? 'Nama tidak tersedia')} ${_getMiddleName(data['name'] ?? 'Nama tidak tersedia')} ${_getLastNameInitial(data['name'] ?? 'Nama tidak tersedia')}',
+                                      'Nama: ${data['name'] ?? 'Nama tidak tersedia'}',
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 5),
                                     Text(
                                       'NISN: ${data['nisn'] ?? 'NISN tidak tersedia'}',
                                       style: GoogleFonts.poppins(
@@ -228,7 +200,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 5),
                                     Text(
                                       'Jenis Kelamin: ${data['gender'] != null ? (data['gender'] == 'Male' ? 'Laki-laki' : 'Perempuan') : 'Jenis kelamin tidak tersedia'}',
                                       style: GoogleFonts.poppins(
@@ -237,7 +209,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 5),
                                     Text(
                                       'Kelas: ${data['kelas'] ?? 'Kelas tidak tersedia'}',
                                       style: GoogleFonts.poppins(
