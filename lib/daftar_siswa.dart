@@ -59,6 +59,32 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
     }
   }
 
+  // Fungsi untuk memisahkan nama depan dan nama belakang
+  String _getFirstName(String name) {
+    var nameParts = name.split(' ');
+    return nameParts.isNotEmpty ? nameParts[0] : '';
+  }
+
+  String _getMiddleName(String name) {
+    var nameParts = name.split(' ');
+    if (nameParts.length > 1) {
+      return nameParts[1];
+    }
+    return '';
+  }
+
+  String _getLastNameInitial(String name) {
+    var nameParts = name.split(' ');
+    if (nameParts.length > 2) {
+      String initials = '';
+      for (int i = 2; i < nameParts.length; i++) {
+        initials += '${nameParts[i][0].toUpperCase()}. ';
+      }
+      return initials.trim();
+    }
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,11 +145,11 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
               stream: _getUserStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
-                  )
-                );
-              }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blue)));
+                }
 
                 // Jika data kosong atau tidak ada hasil pencarian
                 if (!snapshot.hasData ||
@@ -169,65 +195,52 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                                 'assets/image/profile.jpg')
                                             as ImageProvider,
                               ),
-                              const SizedBox(width: 12),
-                              // Informasi Nama dan NISN
-                              SizedBox(
-                                width: 100,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data['name'] ?? 'Nama tidak tersedia',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      data['nisn'] ?? 'NISN tidak tersedia',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
+                              const SizedBox(width: 5),
                               // Garis
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 2),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Container(
                                   width: 1,
-                                  height: 40,
+                                  height: 80,
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(width: 5), 
-                              // Informasi JK dan Kelas
+                              const SizedBox(width: 5),
+                              // Data Profil Siswa 
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      data['gender'] != null
-                                          ? (data['gender'] == 'Male'
-                                              ? 'Laki-laki'
-                                              : 'Perempuan')
-                                          : 'Jenis kelamin tidak tersedia',
+                                      'Nama: ${_getFirstName(data['name'] ?? 'Nama tidak tersedia')} ${_getMiddleName(data['name'] ?? 'Nama tidak tersedia')} ${_getLastNameInitial(data['name'] ?? 'Nama tidak tersedia')}',
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
+                                    const SizedBox(height: 4),
                                     Text(
-                                      'Kelas ${data['kelas'] ?? 'Kelas tidak tersedia'}',
+                                      'NISN: ${data['nisn'] ?? 'NISN tidak tersedia'}',
                                       style: GoogleFonts.poppins(
-                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Jenis Kelamin: ${data['gender'] != null ? (data['gender'] == 'Male' ? 'Laki-laki' : 'Perempuan') : 'Jenis kelamin tidak tersedia'}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'Kelas: ${data['kelas'] ?? 'Kelas tidak tersedia'}',
+                                      style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -235,7 +248,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                     ),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
