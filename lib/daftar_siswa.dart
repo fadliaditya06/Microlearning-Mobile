@@ -189,7 +189,8 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      maxLines: null,
                                     ),
                                     const SizedBox(height: 5),
                                     Text(
