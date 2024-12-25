@@ -89,9 +89,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
             // Search Bar
             Align(
               alignment: Alignment.centerRight,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 38, vertical: 10),
+              child: Padding(padding: const EdgeInsets.symmetric(horizontal: 38, vertical: 10),
                 child: SizedBox(
                   width: 180,
                   height: 40,
@@ -119,12 +117,15 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
               stream: _getUserStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                  return const Center(
+                      child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+                          )
+                        );
+                      }
 
                 // Jika data kosong atau tidak ada hasil pencarian
-                if (!snapshot.hasData ||
-                    _filterSearchResults(snapshot.data!.docs).isEmpty) {
+                if (!snapshot.hasData || _filterSearchResults(snapshot.data!.docs).isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Text(
@@ -166,65 +167,53 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                                 'assets/image/profile.jpg')
                                             as ImageProvider,
                               ),
-                              const SizedBox(width: 12),
-                              // Informasi Nama dan NISN
-                              SizedBox(
-                                width: 100,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data['name'] ?? 'Nama tidak tersedia',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      data['nisn'] ?? 'NISN tidak tersedia',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
+                              const SizedBox(width: 5),
                               // Garis
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 2),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Container(
                                   width: 1,
-                                  height: 40,
+                                  height: 90,
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(width: 5), 
-                              // Informasi JK dan Kelas
+                              const SizedBox(width: 5),
+                              // Data Profil Siswa
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      data['gender'] != null
-                                          ? (data['gender'] == 'Male'
-                                              ? 'Laki-laki'
-                                              : 'Perempuan')
-                                          : 'Jenis kelamin tidak tersedia',
+                                      'Nama: ${data['name'] ?? 'Nama tidak tersedia'}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      softWrap: true,
+                                      maxLines: null,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'NISN: ${data['nisn'] ?? 'NISN tidak tersedia'}',
                                       style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
+                                    const SizedBox(height: 5),
                                     Text(
-                                      'Kelas ${data['kelas'] ?? 'Kelas tidak tersedia'}',
+                                      'Jenis Kelamin: ${data['gender'] != null ? (data['gender'] == 'Male' ? 'Laki-laki' : 'Perempuan') : 'Jenis kelamin tidak tersedia'}',
                                       style: GoogleFonts.poppins(
-                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'Kelas: ${data['kelas'] ?? 'Kelas tidak tersedia'}',
+                                      style: GoogleFonts.poppins(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -232,7 +221,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                                     ),
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

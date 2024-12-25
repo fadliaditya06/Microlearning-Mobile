@@ -22,6 +22,16 @@ class EditPengajarState extends State<EditPengajar> {
     'BIOLOGI',
     'FISIKA',
     'PKN',
+    'PENDIDIKAN AGAMA ISLAM',
+    'ENGLISH',
+    'ARABIC',
+    'INFORMATIKA',
+    'KIMIA',
+    'GEOGRAFI',
+    'EKONOMI',
+    'SOSIOLOGI',
+    'SEJARAH',
+    'ART & CRAFT',
   ];
 
   final List<String> kelasList = [
