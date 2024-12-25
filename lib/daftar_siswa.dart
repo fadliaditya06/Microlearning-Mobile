@@ -231,6 +231,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                 );
               },
             ),
+            const SizedBox(height: 30),
           ],
         ),
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:microlearning/profile_admin.dart';
 import 'kelola_pengguna.dart';
-import 'kelola_pengajar.dart';   
-import 'package:url_launcher/url_launcher.dart';
+import 'kelola_pengajar.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -23,7 +23,7 @@ class AdminPageState extends State<AdminPage> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeContent(), // Beranda 
+    HomeContent(), // Beranda
     KelolaPengguna(), // Halaman Kelola Pengguna
     KelolaPengajar(), // Halaman Kelola Pengajar
   ];
@@ -88,14 +88,13 @@ class AdminPageState extends State<AdminPage> {
       ),
       bottomNavigationBar: Container(
         color: const Color(0xFFFFFD55),
-        padding: const EdgeInsets.symmetric(
-            vertical: 10.0), // Atur padding horizontal
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildBottomNavItem(Icons.home, 'Beranda', 0),
-            _buildBottomNavItem(Icons.menu_book, 'Materi', 1),
-            _buildBottomNavItem(Icons.quiz, 'Quiz', 2),
+            _buildBottomNavItem(Icons.person, 'Kelola Pengguna', 1),
+            _buildBottomNavItem(Icons.edit_square, 'Kelola Pengajar', 2),
           ],
         ),
       ),
@@ -148,7 +147,6 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> {
   List<bool> _isHovered = List.generate(5, (_) => false);
 
-  // Daftar gambar untuk setiap kartu
   final List<String> _images = [
     'assets/images/TPA_ua.png',
     'assets/images/Logo-TK.png',
@@ -157,7 +155,6 @@ class _HomeContentState extends State<HomeContent> {
     'assets/images/Logo-SMAIT.png',
   ];
 
-  // Daftar URL untuk
   final List<String> _urls = [
     'https://tkit-ulilalbabbatam.sch.id/',
     'https://tkit-ulilalbabbatam.sch.id/',
@@ -209,8 +206,7 @@ class _HomeContentState extends State<HomeContent> {
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 16.0), // Menambahkan padding dari kiri
+              padding: const EdgeInsets.only(left: 16.0), 
               child: Text(
                 "Jenjang Pendidikan",
                 style: GoogleFonts.poppins(
@@ -276,13 +272,12 @@ class _HomeContentState extends State<HomeContent> {
       },
       child: GestureDetector(
         onTap: () async {
-          final Uri uri = Uri.parse(url); // Pastikan URL dikonversi ke Uri
-        if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);} 
-        else {
-        throw 'Could not launch $url';
-      }
-
+          final Uri uri = Uri.parse(url); 
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } else {
+            throw 'Could not launch $url';
+          }
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
