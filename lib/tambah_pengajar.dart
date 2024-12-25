@@ -22,7 +22,7 @@ class TambahPengajarState extends State<TambahPengajar> {
     'BIOLOGI',
     'FISIKA',
     'PKN',
-    'PENDIDIKAN AGAMA ISLAM',
+    'PAI',
     'ENGLISH',
     'ARABIC',
     'INFORMATIKA',

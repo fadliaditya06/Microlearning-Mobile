@@ -22,7 +22,7 @@ class EditPengajarState extends State<EditPengajar> {
     'BIOLOGI',
     'FISIKA',
     'PKN',
-    'PENDIDIKAN AGAMA ISLAM',
+    'PAI',
     'ENGLISH',
     'ARABIC',
     'INFORMATIKA',
