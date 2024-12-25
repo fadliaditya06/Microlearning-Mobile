@@ -122,7 +122,6 @@ class ListKontenState extends State<ListKonten> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
 
           // StreamBuilder untuk menampilkan data subab
           StreamBuilder<QuerySnapshot>(
@@ -167,8 +166,6 @@ class ListKontenState extends State<ListKonten> {
               return Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(16), 
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: filteredSubabList.length,
                   itemBuilder: (context, index) {
                     var subab = filteredSubabList[index];
