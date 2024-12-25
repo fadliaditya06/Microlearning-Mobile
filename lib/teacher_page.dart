@@ -35,6 +35,7 @@ class TeacherPageState extends State<TeacherPage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
+          // Header setengah lingkaran
           if (_selectedIndex == 0)
             Container(
               height: 150,
@@ -61,16 +62,16 @@ class TeacherPageState extends State<TeacherPage> {
                     ),
                   ),
                   Align(
-                  alignment: const Alignment(0.9, 0),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileGuru(),
-                        ),
-                      );
-                    },
+                    alignment: const Alignment(0.9, 0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileGuru(),
+                          ),
+                        );
+                      },
                       icon: const Icon(
                         CupertinoIcons.person_crop_circle,
                         size: 35,
@@ -81,6 +82,7 @@ class TeacherPageState extends State<TeacherPage> {
                 ],
               ),
             ),
+          // Konten Utama
           Expanded(
             child: _pages[_selectedIndex],
           ),
@@ -94,9 +96,8 @@ class TeacherPageState extends State<TeacherPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildBottomNavItem(Icons.home, 'Beranda', 0),
-            _buildBottomNavItem(Icons.file_open, 'Kelola Konten', 1),
-            _buildBottomNavItem(Icons.menu_book, 'Materi', 2),
-            _buildBottomNavItem(Icons.group, 'Daftar Siswa', 3),
+            _buildBottomNavItem(Icons.menu_book, 'Materi', 1),
+            _buildBottomNavItem(Icons.quiz, 'Quiz', 2),
           ],
         ),
       ),
@@ -149,12 +150,22 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> {
   List<bool> _isHovered = List.generate(5, (_) => false);
 
+  // Daftar gambar untuk setiap kartu
   final List<String> _images = [
     'assets/images/TPA_ua.png',
     'assets/images/Logo-TK.png',
     'assets/images/Logo-SDIT.jpg',
     'assets/images/Logo-SMPIT.png',
     'assets/images/Logo-SMAIT.png',
+  ];
+
+  // Daftar URL untuk
+  final List<String> _urls = [
+    'https://tkit-ulilalbabbatam.sch.id/',
+    'https://tkit-ulilalbabbatam.sch.id/',
+    'https://sditulilalbabbatam.sch.id/',
+    'https://smpit-ulilalbabbatam.sch.id/',
+    'https://smait-ulilalbabbatam.sch.id/',
   ];
 
   @override
@@ -167,12 +178,12 @@ class _HomeContentState extends State<HomeContent> {
           const SizedBox(height: 20),
           Center(
             child: Container(
-              width: 200, 
-              height: 200, 
+              width: 200,
+              height: 200,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/ASET-PPDB.png'),
-                  fit: BoxFit.cover, 
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -200,7 +211,8 @@ class _HomeContentState extends State<HomeContent> {
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
+              padding: const EdgeInsets.only(
+                  left: 16.0), // Menambahkan padding dari kiri
               child: Text(
                 "Jenjang Pendidikan",
                 style: GoogleFonts.poppins(
@@ -237,6 +249,7 @@ class _HomeContentState extends State<HomeContent> {
                               : index == 3
                                   ? 'SMPIT'
                                   : 'SMAIT',
+                  url: _urls[index],
                 );
               },
             ),
@@ -246,8 +259,12 @@ class _HomeContentState extends State<HomeContent> {
     );
   }
 
-  Widget _buildCard(
-      {required int index, required String image, required String title}) {
+  Widget _buildCard({
+    required int index,
+    required String image,
+    required String title,
+    required String url,
+  }) {
     return MouseRegion(
       onEnter: (_) {
         setState(() {
@@ -259,41 +276,53 @@ class _HomeContentState extends State<HomeContent> {
           _isHovered[index] = false;
         });
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        transform: Matrix4.translationValues(0, _isHovered[index] ? -10 : 0, 0),
-        child: Card(
-          elevation: _isHovered[index] ? 10 : 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    image,
-                    height: 97, 
-                    width: 93,
-                    fit: BoxFit.cover, 
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Flexible(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+      child: GestureDetector(
+        onTap: () async {
+          final Uri uri = Uri.parse(url); // Pastikan URL dikonversi ke Uri
+        if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);} 
+        else {
+        throw 'Could not launch $url';
+      }
+
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          transform:
+              Matrix4.translationValues(0, _isHovered[index] ? -10 : 0, 0),
+          child: Card(
+            elevation: _isHovered[index] ? 10 : 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      image,
+                      height: 97,
+                      width: 93,
+                      fit: BoxFit.cover,
                     ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
