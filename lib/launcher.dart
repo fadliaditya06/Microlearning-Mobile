@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:microlearning/login_page.dart';
+import 'package:microlearning/views/auth/login_page.dart';
 
 class LauncherPage extends StatefulWidget {
   const LauncherPage({super.key});

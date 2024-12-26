@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'list_konten.dart';
+import 'daftar_konten.dart';
 
 class KelasPage extends StatelessWidget {
   final String mataPelajaran;

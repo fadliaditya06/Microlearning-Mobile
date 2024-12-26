@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:microlearning/register_page.dart';
+import 'package:microlearning/views/auth/tambah_pengguna.dart';
 
 class KelolaPengguna extends StatefulWidget {
   const KelolaPengguna({super.key});

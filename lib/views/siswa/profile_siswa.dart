@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart'; // Untuk kIsWeb
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
-import 'login_page.dart'; 
+import '../auth/login_page.dart'; 
 import 'package:flutter/cupertino.dart';
 
 class UserModel {

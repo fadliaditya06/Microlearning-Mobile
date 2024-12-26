@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'tambah_konten.dart';
-import 'daftar_konten.dart';
+import 'daftar_kelola_konten.dart';
 
 class KelolaKontenPage extends StatefulWidget {
   const KelolaKontenPage({super.key});

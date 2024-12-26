@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:microlearning/konten.dart';
+import 'package:microlearning/views/materi/konten_page.dart';
 
 class ListKonten extends StatefulWidget {
   final String kelas;
