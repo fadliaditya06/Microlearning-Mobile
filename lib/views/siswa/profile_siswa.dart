@@ -624,10 +624,9 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 30.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.black, size: 25),
+                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
                     onPressed: () {
                       Navigator.pop(context);
                     },

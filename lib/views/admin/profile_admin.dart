@@ -1,4 +1,4 @@
-import 'dart:io' as io; 
+import 'dart:io' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart'; // Untuk kIsWeb
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
-import '../auth/login_page.dart'; 
+import '../auth/login_page.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserModel {
@@ -65,7 +65,7 @@ class ProfileAdmin extends StatefulWidget {
 }
 
 class ProfileAdminState extends State<ProfileAdmin> {
-  io.File? imageFile; 
+  io.File? imageFile;
   Uint8List? imageBytes; // Untuk Web
   String? imageUrl;
   bool isLoading = false;
@@ -84,30 +84,33 @@ class ProfileAdminState extends State<ProfileAdmin> {
 
     if (user != null) {
       currentUserId = user.uid;
-      await _loadUserProfile();
+      await _loadAdminProfile(); 
     } else {
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/login_page');
     }
   }
 
-  Future<void> _loadUserProfile() async {
+  Future<void> _loadAdminProfile() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      final docSnapshot = await FirebaseFirestore.instance
+      // Ambil data admin berdasarkan role
+      final querySnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(currentUserId)
+          .where('role', isEqualTo: 'Admin')
           .get();
 
-      if (docSnapshot.exists) {
-        userModel = UserModel.fromSnapshot(docSnapshot);
-        imageUrl = docSnapshot.data()?['profile_image'];
-        logger.i('Data pengguna berhasil diambil: ${userModel!.toJson()}');
+      if (querySnapshot.docs.isNotEmpty) {
+        final adminDoc = querySnapshot.docs.first;
+        userModel = UserModel.fromSnapshot(adminDoc);
+        imageUrl = adminDoc.data()['profile_image'];
+        logger
+            .i('Data pengguna admin berhasil diambil: ${userModel!.toJson()}');
       } else {
-        logger.w('Dokumen tidak ditemukan untuk pengguna ini');
+        logger.w('Tidak ada pengguna dengan role Admin');
       }
     } catch (e) {
       logger.e('Gagal memuat data profil: $e');
@@ -319,12 +322,12 @@ class ProfileAdminState extends State<ProfileAdmin> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
                     const SizedBox(height: 5),
                     Text(
                       isPassword ? '••••••' : value,
@@ -394,10 +397,9 @@ class ProfileAdminState extends State<ProfileAdmin> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 30.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.black, size: 25),
+                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
                     onPressed: () {
                       Navigator.pop(context);
                     },
