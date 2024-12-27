@@ -31,6 +31,16 @@ class DaftarKonten extends StatelessWidget {
     }
   }
 
+  // Fungsi jika nama guru terlalu panjang
+  String getShortName(String fullName) {
+    List<String> words = fullName.split(' ');
+    if (words.length > 3) {
+      return '${words.sublist(0, 4).join(' ')}...';
+    } else {
+      return fullName;
+    }
+  }
+
   Future<void> deleteContent(BuildContext context, String id) async {
     try {
       // Hapus dokumen dari Firestore
@@ -79,8 +89,7 @@ class DaftarKonten extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.edit_outlined,
-                          size: 22, color: Color(0xFF13ADDE)),
+                      icon: const Icon(Icons.edit_outlined, size: 22, color: Color(0xFF13ADDE)),
                       onPressed: () {
                         Navigator.push(
                           scaffoldContext,
@@ -140,16 +149,19 @@ class DaftarKonten extends StatelessWidget {
               style: GoogleFonts.poppins(fontSize: 15),
             ),
             const SizedBox(height: 8),
+            Text(
+              content['judulSubBab'] ?? 'Tidak Ada Judul Sub Bab',
+              style: GoogleFonts.poppins(fontSize: 15),
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8), 
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  content['judulSubBab'] ?? 'Tidak Ada Judul Sub Bab',
+                  getShortName(content['namaGuru'] ?? 'Tidak Ada Pengajar'),
                   style: GoogleFonts.poppins(fontSize: 15),
-                ),
-                Text(
-                  content['namaGuru'] ?? 'Tidak Ada Pengajar',
-                  style: GoogleFonts.poppins(fontSize: 15),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -212,8 +224,8 @@ class DaftarKonten extends StatelessWidget {
                 return const Center(
                     child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
-                        )
-                      );
+                    )
+                  );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(

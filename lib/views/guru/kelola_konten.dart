@@ -42,6 +42,16 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
     }
   }
 
+  // Fungsi jika nama guru terlalu panjang
+  String getShortName(String fullName) {
+    List<String> words = fullName.split(' '); 
+    if (words.length > 3) {
+      return '${words.sublist(0, 4).join(' ')}...'; 
+    } else {
+      return fullName; 
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +81,7 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
           const SizedBox(height: 40),
           // FutureBuilder untuk data
           Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
+            child: FutureBuilder<List<Map<String, dynamic>>>( 
               future: fetchLessons(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,8 +101,10 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
                   return const Padding(
                     padding: EdgeInsets.only(bottom: 120),
                     child: Center(
-                      child: Text('Tidak ada data.',
-                          style: TextStyle(fontSize: 17)),
+                      child: Text(
+                        'Tidak ada data.', 
+                        style: TextStyle(fontSize: 17)
+                      ),
                     ),
                   );
                 }
@@ -191,9 +203,10 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
                   Align(
                     alignment: Alignment.bottomRight,
                     child: Text(
-                      teacher,
+                      getShortName(teacher), // Memanggil fungsi untuk memotong nama guru
                       style: GoogleFonts.poppins(fontSize: 15),
                       textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
