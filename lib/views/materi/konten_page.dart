@@ -67,7 +67,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
   void _tambahKomentar() {
     if (_komentarController.text.isNotEmpty) {
       String userName = name ?? 'Anonim';
-      String userImage = imageUrl ?? 'https://www.example.com/default-avatar.png'; 
+      String userImage = imageUrl ?? 'https://www.example.com/default-avatar.png';
       FirebaseFirestore.instance.collection('komentar').add({
         'subabId': widget.subabId,
         'komentar': _komentarController.text,
@@ -88,8 +88,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
               )
             );
           }
@@ -136,8 +135,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                           Padding(
                             padding: const EdgeInsets.only(left: 30.0),
                             child: IconButton(
-                              icon: const Icon(Icons.arrow_back,
-                                  color: Colors.black, size: 25),
+                              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
                               onPressed: () {
                                 Navigator.pop(context);
                               },
@@ -145,25 +143,25 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                           ),
                           const Spacer(),
                           // Menampilkan judulSubBab di tengah
-                          Padding(
-                            padding: const EdgeInsets.only(right: 70.0),
-                            child: Center(
-                              child: Text(
-                                judulSubBab,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 25,
-                                  color: Colors.black,
+                            Padding(
+                              padding: const EdgeInsets.only(right: 70.0),
+                              child: Center(
+                                child: Text(
+                                  "Konten Pelajaran",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 25,
+                                    color: Colors.black,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
-                          ),
                           const Spacer(),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -194,16 +192,17 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                         ],
                       ),
                     ),
+                    // Garis 
                     const Divider(color: Colors.yellow, thickness: 1.5),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                       child: Text(
                         judulSubBab,
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
+                        overflow: TextOverflow.visible,
                       ),
                     ),
                     // Materi PDF
@@ -233,8 +232,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                             );
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 15.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
                             decoration: BoxDecoration(
                               color: Colors.grey[200],
                               borderRadius: BorderRadius.circular(12.0),
@@ -287,14 +285,16 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: Text(
-                            'Video Materi $judulSubBab',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Text(
+                              'Video Materi $judulSubBab',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ),
@@ -341,9 +341,10 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                     ConnectionState.waiting) {
                                   return const Center(
                                       child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
-                                      )
-                                  );
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(Colors.blue)
+                                            )
+                                          );
                                 }
                                 if (snapshot.hasError) {
                                   return const Center(
@@ -361,10 +362,8 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                     ),
                                   ));
                                 }
-
                                 return SizedBox(
-                                  height:
-                                      300, 
+                                  height: 300,
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     itemCount: snapshot.data!.docs.length,
@@ -377,32 +376,27 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                             .doc(komentarUid)
                                             .get(),
                                         builder: (context, userSnapshot) {
-                                          if (userSnapshot.connectionState == ConnectionState.waiting) {
-                                          }
+                                          if (userSnapshot.connectionState ==
+                                              ConnectionState.waiting) {}
                                           if (userSnapshot.hasError) {
                                             return const Center(
                                                 child: Text(
-                                                    'Gagal mengambil data pengguna.'));
+                                                    'Gagal mengambil data pengguna.')
+                                                  );
                                           }
-                                          // Memeriksa data pengguna 
+                                          // Memeriksa data pengguna
                                           var userData = userSnapshot.data
                                               ?.data() as Map<String, dynamic>?;
 
-                                          String name =
-                                              userData?['name'] ?? 'Anonim';
-                                          String userImage =
-                                              userData?['profile_image'] ??
-                                                  ''; // Kosong jika tidak ada
+                                          String name = userData?['name'] ?? 'Anonim';
+                                          String userImage = userData?['profile_image'] ?? ''; 
                                           var timestamp = komentar['timestamp'];
                                           DateTime? dateTime;
                                           if (timestamp != null) {
                                             dateTime = timestamp.toDate();
                                           }
                                           var timeAgo = dateTime != null
-                                              ? timeago.format(dateTime,
-                                                  locale: 'id')
-                                              : "Waktu tidak tersedia";
-
+                                              ? timeago.format(dateTime, locale: 'id') : "Waktu tidak tersedia";
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 8.0),
@@ -413,8 +407,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                                     BorderRadius.circular(8.0),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.2),
+                                                    color: Colors.grey.withOpacity(0.2),
                                                     spreadRadius: 2,
                                                     blurRadius: 5,
                                                   ),
@@ -422,12 +415,11 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                               ),
                                               child: ListTile(
                                                 leading: CircleAvatar(
-                                                  backgroundImage: userImage
-                                                          .isNotEmpty
+                                                  backgroundImage: userImage.isNotEmpty
                                                       ? NetworkImage(userImage)
-                                                      : const AssetImage(
-                                                              'assets/images/default_avatar.png')
-                                                          as ImageProvider, // Jika profil nya kosong
+                                                      : const AssetImage
+                                                      ('assets/images/default_avatar.png')
+                                                          as ImageProvider, 
                                                 ),
                                                 title: Text(
                                                   komentar['name'] ?? name,
@@ -438,8 +430,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                                   ),
                                                 ),
                                                 subtitle: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       komentar['komentar'] ?? '',
@@ -448,8 +439,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                                     const SizedBox(height: 4),
                                                     Text(
                                                       'Dikirim $timeAgo',
-                                                      style:
-                                                          GoogleFonts.poppins(
+                                                      style: TextStyle(
                                                         fontSize: 10,
                                                         fontWeight: FontWeight.w400,
                                                         color: Colors.grey[600],
@@ -557,7 +547,9 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                           width: 2.0,
                                         ),
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 14),
                                       suffixIcon: IconButton(
                                         icon: const Icon(Icons.send,
                                             color: Color(0xFF13ADDE)),
@@ -565,7 +557,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                                           if (_komentarController.text
                                               .trim()
                                               .isEmpty) return;
-                                              _tambahKomentar();
+                                          _tambahKomentar();
                                         },
                                       ),
                                     ),

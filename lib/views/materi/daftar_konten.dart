@@ -75,7 +75,7 @@ class ListKontenState extends State<ListKonten> {
                 Padding(
                   padding: const EdgeInsets.only(right: 70.0),
                   child: Text(
-                    'Konten Pelajaran',
+                    'Daftar Konten',
                     style: GoogleFonts.poppins(
                         fontSize: 25,
                         color:
