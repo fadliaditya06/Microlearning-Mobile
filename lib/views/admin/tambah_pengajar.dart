@@ -153,7 +153,9 @@ class TambahPengajarState extends State<TambahPengajar> {
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(color: Color(0xFF13ADDE)));
+                    return const Center(child: CircularProgressIndicator(color: Color(0xFF13ADDE)
+                    )
+                  );
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -194,7 +196,13 @@ class TambahPengajarState extends State<TambahPengajar> {
                         items: daftarTeacher.map((String teacher) {
                           return DropdownMenuItem<String>(
                             value: teacher,
-                            child: Text(teacher),
+                            child: SizedBox(
+                              width: 250, 
+                              child: Text(
+                                teacher,
+                                overflow: TextOverflow.ellipsis, 
+                              ),
+                            ),
                           );
                         }).toList(),
                         onChanged: (String? newValue) {
