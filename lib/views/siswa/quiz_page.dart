@@ -11,14 +11,40 @@ class QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Quiz"),
-      ),
-      body: const Center(
-        child: Text(
-          "Halaman Quiz",
-          style: TextStyle(fontSize: 24),
-        ),
+      body: Column(
+        children: [
+          // Header
+          Container(
+            height: 150,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFFFD55),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(150),
+                bottomRight: Radius.circular(150),
+              ),
+            ),
+            child: const Center(
+              child: Text(
+                'Quiz',
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          const Expanded(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 100),
+                child: Text(
+                  "Quiz tidak tersedia.",
+                  style: TextStyle(fontSize: 17),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
