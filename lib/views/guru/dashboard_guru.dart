@@ -55,7 +55,7 @@ class TeacherPageState extends State<TeacherPage> {
                       height: 200,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/images/logo-ulilalbab.png'),
+                          image: AssetImage('assets/images/logo-dashboard.png'),
                           fit: BoxFit.contain,
                         ),
                       ),
