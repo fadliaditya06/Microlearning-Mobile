@@ -1,4 +1,4 @@
-import 'dart:io' as io; 
+import 'dart:io' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart'; // Untuk kIsWeb
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
-import '../auth/login_page.dart'; 
+import '../auth/login_page.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserModel {
@@ -65,7 +65,7 @@ class ProfileGuru extends StatefulWidget {
 }
 
 class ProfileGuruState extends State<ProfileGuru> {
-  io.File? imageFile; 
+  io.File? imageFile;
   Uint8List? imageBytes; // Untuk Web
   String? imageUrl;
   bool isLoading = false;
@@ -308,10 +308,14 @@ class ProfileGuruState extends State<ProfileGuru> {
           ),
           padding: const EdgeInsets.all(10),
           width: 360,
-          height: 75,
+          constraints: const BoxConstraints(minHeight: 75),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              icon,
+              Padding(
+                padding: const EdgeInsets.only(top: 15), 
+                child: icon, 
+              ),
               const SizedBox(width: 20),
               Expanded(
                 child: Column(
@@ -319,25 +323,29 @@ class ProfileGuruState extends State<ProfileGuru> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
                     const SizedBox(height: 5),
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
+                      softWrap: true, 
+                      overflow: TextOverflow.visible,
                     ),
                   ],
                 ),
               ),
               if (isPassword)
-                GestureDetector(
-                  onTap: () {
-                    showChangePasswordModal();
-                  },
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: GestureDetector(
+                  onTap: showChangePasswordModal,
                   child: const CircleAvatar(
                     radius: 20,
                     backgroundColor: Color(0xFFFFFD55),
@@ -348,6 +356,7 @@ class ProfileGuruState extends State<ProfileGuru> {
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         ),
@@ -524,7 +533,8 @@ class ProfileGuruState extends State<ProfileGuru> {
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.black, size: 25),
                     onPressed: () {
                       Navigator.pop(context);
                     },

@@ -311,12 +311,16 @@ class ProfileSiswaState extends State<ProfileSiswa> {
               ),
             ],
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.all(10),
           width: 360,
-          height: 75,
+          constraints: const BoxConstraints(minHeight: 75),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              icon,
+              Padding(
+                padding: const EdgeInsets.only(top: 15), 
+                child: icon, 
+              ),
               const SizedBox(width: 20),
               Expanded(
                 child: Column(
@@ -327,19 +331,25 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                       child: Text(
                         title,
                         style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       isPassword ? '••••••' : value,
                       style: const TextStyle(fontSize: 14),
+                      softWrap: true, 
+                      overflow: TextOverflow.visible,
                     ),
                   ],
                 ),
               ),
               if (isPassword || isKelas)
-                GestureDetector(
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: GestureDetector(
                   onTap: () {
                     if (isPassword) {
                       showChangePasswordModal();
@@ -357,6 +367,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
                     ),
                   ),
                 ),
+              ),
             ],
           ),
         ),
