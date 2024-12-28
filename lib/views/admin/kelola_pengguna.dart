@@ -11,10 +11,26 @@ class KelolaPengguna extends StatefulWidget {
 }
 
 class KelolaPenggunaState extends State<KelolaPengguna> {
-  final CollectionReference usersCollection =
-      FirebaseFirestore.instance.collection('users');
-      String? _selectedRole;
+  final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+  final TextEditingController _searchController = TextEditingController();
+  String? _selectedRole;
+  String _searchQuery = "";
 
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text.toLowerCase();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   void _showDeleteConfirmationDialog(String id) {
     showDialog(
@@ -22,8 +38,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Konfirmasi Hapus'),
-          content:
-              const Text('Apakah Anda yakin ingin menghapus data pengguna ini?'),
+          content: const Text('Apakah Anda yakin ingin menghapus data pengguna ini?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -114,6 +129,33 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
               ),
             ),
             const SizedBox(height: 15),
+            // Search Bar
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: SizedBox(
+                  width: 180,
+                  height: 40,
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                      suffixIcon: const Icon(Icons.search),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
             // Tombol Filter dan Tambah
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -199,7 +241,9 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                       .where('role', isEqualTo: _selectedRole)
                       .orderBy('name', descending: false)
                       .snapshots()
-                  : usersCollection.orderBy('name', descending: false).snapshots(),
+                  : usersCollection
+                      .orderBy('name', descending: false)
+                      .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Center(child: Text("Terjadi kesalahan"));
@@ -212,7 +256,24 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                   return const Center(child: Text("Tidak ada data pengguna"));
                 }
 
-                final data = snapshot.data!.docs;
+                // Filter data berdasarkan search query
+                final data = snapshot.data!.docs.where((doc) {
+                  final docData = doc.data() as Map<String, dynamic>;
+                  final name = docData['name']?.toString().toLowerCase() ?? '';
+                  return name.contains(_searchQuery);
+                }).toList();
+
+                if (data.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 100),
+                      child: Text(
+                        "Tidak ada nama pengguna yang cocok.",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  );
+                }
 
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -304,7 +365,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(
-                            peranIndo (docData['role']),
+                            peranIndo(docData['role']),
                             style: GoogleFonts.poppins(),
                           )),
                           DataCell(Text(

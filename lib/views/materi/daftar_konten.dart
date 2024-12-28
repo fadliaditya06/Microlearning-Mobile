@@ -20,10 +20,9 @@ class ListKonten extends StatefulWidget {
 }
 
 class ListKontenState extends State<ListKonten> {
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('konten');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('konten');
   String searchQuery = '';
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   Stream<QuerySnapshot> _getSubab() {
     return userCollection
@@ -97,20 +96,17 @@ class ListKontenState extends State<ListKonten> {
                 height: 40,
                 child: TextField(
                   controller: _searchController,
-                  cursorColor: const Color(0xFF13ADDE),
                   onChanged: (query) {
                     setState(() {
                       searchQuery = query;
                     });
                   },
                   decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
                     suffixIcon: const Icon(Icons.search),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
-                      borderSide:
-                          const BorderSide(color: Color(0xFF13ADDE), width: 1),
+                      borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),

@@ -12,8 +12,25 @@ class KelolaPengajar extends StatefulWidget {
 }
 
 class KelolaPengajarState extends State<KelolaPengajar> {
-  final CollectionReference pengajarCollection =
-      FirebaseFirestore.instance.collection('pengajar');
+  final CollectionReference pengajarCollection = FirebaseFirestore.instance.collection('pengajar');
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text.toLowerCase();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   // Fungsi untuk menampilkan modal konfirmasi
   void _showDeleteConfirmationDialog(String id) {
@@ -27,7 +44,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Tutup dialog
+                Navigator.of(context).pop(); 
               },
               child: const Text(
                 'Batal',
@@ -37,7 +54,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
             TextButton(
               onPressed: () {
                 _deletePengajar(id);
-                Navigator.of(context).pop(); // Tutup dialog setelah menghapus
+                Navigator.of(context).pop(); 
               },
               child: const Text(
                 'Hapus',
@@ -103,12 +120,35 @@ class KelolaPengajarState extends State<KelolaPengajar> {
               ),
             ),
             const SizedBox(height: 15),
-            // Tombol Tambah di sebelah kanan
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Search Bar
+                  Expanded(
+                    child: SizedBox(
+                      width: 180,
+                      height: 40,
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                          suffixIcon: const Icon(Icons.search),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Color(0xFF13ADDE), width: 1),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 55),
+                  // Tombol Tambah
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.push(
@@ -120,9 +160,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF13ADDE),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                     ),
                     icon: const Icon(Icons.add, color: Colors.black, size: 17),
                     label: Text(
@@ -137,6 +175,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
               ),
             ),
             const SizedBox(height: 15),
+
             // Pengambilan data pengajar
             StreamBuilder<QuerySnapshot>(
               stream: pengajarCollection.snapshots(),
@@ -145,14 +184,31 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                   return const Center(child: Text("Terjadi kesalahan"));
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(color: Color(0xFF13ADDE)));
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(child: Text("Tidak ada data pengajar"));
                 }
 
-                final data = snapshot.data!.docs;
+                // Filter data berdasarkan search query
+                final data = snapshot.data!.docs.where((doc) {
+                  final docData = doc.data() as Map<String, dynamic>;
+                  final name = docData['namaGuru']?.toString().toLowerCase() ?? '';
+                  return name.contains(_searchQuery);
+                }).toList();
+
+                if (data.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 100),
+                      child: Text(
+                        "Tidak ada nama pengajar yang cocok.",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  );
+                }
 
                 return SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -234,8 +290,7 @@ class KelolaPengajarState extends State<KelolaPengajar> {
                           DataCell(Row(
                             children: [
                               IconButton(
-                                icon:
-                                    const Icon(Icons.edit, color: Color(0xFF13ADDE)),
+                                icon: const Icon(Icons.edit, color: Color(0xFF13ADDE)),
                                 onPressed: () {
                                   var dataPengajar = {
                                     'id': doc.id,

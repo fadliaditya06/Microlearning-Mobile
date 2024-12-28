@@ -129,7 +129,7 @@ class DaftarSiswaPageState extends State<DaftarSiswaPage> {
                   return Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Text(
-                      'Tidak ada data siswa yang cocok.',
+                      'Tidak ada nama siswa yang cocok.',
                       style: GoogleFonts.poppins(fontSize: 17),
                     ),
                   );
