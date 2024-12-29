@@ -1,16 +1,24 @@
-# microlearning
+# Judul Proyek : Aplikasi Microlearning berbasis mobile
 
-A new Flutter project.
+## Nomor ID	: PBL IF-10
 
-## Getting Started
+### Pengusul Proyek	:	Siskha Handayani, M.Si
 
-This project is a starting point for a Flutter application.
+### Manajer proyek	:	Siskha Handayani, M.Si
 
-A few resources to get you started if this is your first Flutter project:
+### Anggota Tim : 
+- [3312301037] – Kevin Reynaldi Panjaitan (Ketua Tim)
+- [3312301006] – Fadli Aditya Suhairi
+- [3312301012] – Faradilla Zahara
+- [3312301044] – Rikardo Anju Sinaga
+- [3312301074] – Steven Situmorang
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+#### Pengarah (Dosen & Laboran mata kuliah PBL) : 
+- Siskha Handayani M.Si (Manajer Proyek)
+- Muchamad Fajri Amirul Nasrullah, S.ST., M.Sc (Mata Kuliah Pilihan 1 – Mobile dan Proyek Inovasi Agile)
+- Sartikha, S. ST., M.Eng (Interaksi Manusia Komputer)
+- Andy Triwinarko, ST., MT., Ph.D (Rekayasa Perangkat Lunak Lanjut)
+- Yeni Rokhayati, S.Si., M.Sc (Statistika)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Teknik Informatika, Politeknik Negeri Batam
+
