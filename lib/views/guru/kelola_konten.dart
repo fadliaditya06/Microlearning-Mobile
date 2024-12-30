@@ -108,7 +108,7 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
                     ),
                   );
                 }
-
+                // Menampilkan daftar pelajaran dari data yang diperoleh dalam bentuk kartu
                 List<Map<String, dynamic>> lessons = snapshot.data!;
                 return SingleChildScrollView(
                   child: Padding(
@@ -118,8 +118,7 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: buildLessonCard(
-                            lesson['mataPelajaran'] ??
-                                'Tidak Ada Mata Pelajaran',
+                            lesson['mataPelajaran'] ?? 'Tidak Ada Mata Pelajaran',
                             lesson['kelas'] ?? 'Tidak Ada Kelas',
                             lesson['namaGuru'] ?? 'Tidak Ada Guru',
                             lesson['id'],
@@ -137,9 +136,8 @@ class KelolaKontenPageState extends State<KelolaKontenPage> {
     );
   }
 
-  // Build individual lesson card
-  Widget buildLessonCard(
-      String subject, String grade, String teacher, String lessonId) {
+  // Membuat card untuk konten pelajaran 
+  Widget buildLessonCard(String subject, String grade, String teacher, String lessonId) {
     return GestureDetector(
       onTap: () {
         Navigator.push(

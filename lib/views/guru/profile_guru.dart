@@ -91,6 +91,7 @@ class ProfileGuruState extends State<ProfileGuru> {
     }
   }
 
+  // Fungsi untuk memuat data profil pengguna
   Future<void> _loadUserProfile() async {
     setState(() {
       isLoading = true;
@@ -124,6 +125,7 @@ class ProfileGuruState extends State<ProfileGuru> {
     }
   }
 
+  // Fungsi untuk memilih gambar dari galeri
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -181,6 +183,7 @@ class ProfileGuruState extends State<ProfileGuru> {
     }
   }
 
+  // Fungsi untuk mengupload data gambar
   Future<String?> _uploadToFirebase(Uint8List data) async {
     final destination = 'images/$currentUserId';
 
@@ -267,9 +270,9 @@ class ProfileGuruState extends State<ProfileGuru> {
     }
 
     // Menampilkan informasi dalam bahasa Indonesia
-    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ??
-        'Tidak diketahui';
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
 
+    // Menampilkan informasi pengguna
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -277,11 +280,13 @@ class ProfileGuruState extends State<ProfileGuru> {
         _buildUserInfoCard(const Icon(CupertinoIcons.mail), "Email", userModel!.email),
         _buildUserInfoCard(const Icon(CupertinoIcons.person_2), "Jenis Kelamin", jkIndo),
         _buildUserInfoCard(const Icon(Icons.badge_outlined), "NIP", userModel!.nip),
-        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, isPassword: true),
+        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, 
+        isPassword: true),
       ],
     );
   }
 
+  // Widget untuk menampilkan informasi pengguna dalam bentuk card.
   Widget _buildUserInfoCard(Icon icon, String title, String value,
       {bool isPassword = false}) {
     return GestureDetector(
@@ -366,8 +371,7 @@ class ProfileGuruState extends State<ProfileGuru> {
 
   Future<void> showChangePasswordModal() async {
     final TextEditingController newPasswordController = TextEditingController();
-    final TextEditingController confirmPasswordController =
-        TextEditingController();
+    final TextEditingController confirmPasswordController = TextEditingController();
 
     showDialog(
       context: context,
@@ -462,6 +466,7 @@ class ProfileGuruState extends State<ProfileGuru> {
     );
   }
 
+  // Fungsi untuk mengubah password pengguna
   Future<void> _updatePassword(String newPassword) async {
     try {
       await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
@@ -477,6 +482,7 @@ class ProfileGuruState extends State<ProfileGuru> {
     }
   }
 
+  // Fungsi logout
   Future<void> showLogoutConfirmation() async {
     showDialog(
       context: context,

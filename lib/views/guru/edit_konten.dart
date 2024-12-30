@@ -85,7 +85,7 @@ class EditKontenState extends State<EditKonten> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Konten berhasil diperbarui')),
+        const SnackBar(content: Text('Konten berhasil diperbarui')),
       );
 
       Navigator.pop(context);
@@ -138,11 +138,11 @@ class EditKontenState extends State<EditKonten> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('File PDF berhasil diperbarui')),
+          const SnackBar(content: Text('File PDF berhasil diperbarui')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Terjadi kesalahan saat memperbarui PDF')),
+          const SnackBar(content: Text('Terjadi kesalahan saat memperbarui PDF')),
         );
       }
     }

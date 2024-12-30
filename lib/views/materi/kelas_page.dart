@@ -4,10 +4,8 @@ import 'daftar_konten.dart';
 
 class KelasPage extends StatelessWidget {
   final String mataPelajaran;
-  final String idlesson; // Menambahkan idlesson di sini
-
-  const KelasPage(
-      {super.key, required this.mataPelajaran, required this.idlesson});
+  final String idlesson;
+  const KelasPage({super.key, required this.mataPelajaran, required this.idlesson});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class KelasPage extends StatelessWidget {
           Container(
             height: 150,
             decoration: const BoxDecoration(
-              color: Color(0xFFFFFD55), // Warna kuning
+              color: Color(0xFFFFFD55), 
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(150),
                 bottomRight: Radius.circular(150),
@@ -29,8 +27,7 @@ class KelasPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 30.0),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.black, size: 25),
+                    icon: const Icon(Icons.arrow_back, color: Colors.black, size: 25),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -42,7 +39,7 @@ class KelasPage extends StatelessWidget {
                   child: Text(
                     'Kategori Kelas',
                     style: GoogleFonts.poppins(
-                        fontSize: 25, color: Colors.black), // Warna teks hitam
+                        fontSize: 25, color: Colors.black), 
                   ),
                 ),
                 const Spacer(),
@@ -69,6 +66,7 @@ class KelasPage extends StatelessWidget {
     );
   }
 
+  // Widget untuk membuat box kategori kelas
   Widget _buildKelasBox(BuildContext context, String kelas) {
     return GestureDetector(
       onTap: () {

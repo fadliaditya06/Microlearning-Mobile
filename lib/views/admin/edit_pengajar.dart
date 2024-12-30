@@ -16,6 +16,7 @@ class EditPengajarState extends State<EditPengajar> {
   String? selectedMataPelajaran;
   String? selectedKelas;
 
+  // Daftar Mata Pelajaran
   final List<String> mataPelajaranList = [
     'MATEMATIKA',
     'BAHASA INDONESIA',
@@ -34,12 +35,14 @@ class EditPengajarState extends State<EditPengajar> {
     'ART & CRAFT',
   ];
 
+  // Daftar Kategori Kelas
   final List<String> kelasList = [
     'Kelas 10',
     'Kelas 11',
     'Kelas 12',
   ];
 
+  // Menginisialisasi nilai awal untuk nama guru, mata pelajaran dan kelas
   @override
   void initState() {
     super.initState();
@@ -232,6 +235,7 @@ class EditPengajarState extends State<EditPengajar> {
                                   'kelas': selectedKelas,
                                 };
                                 try {
+                                  // Memperbarui data pengajar di Firestore
                                   await FirebaseFirestore.instance
                                       .collection('pengajar')
                                       .doc(widget.data['id'])

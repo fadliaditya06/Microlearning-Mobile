@@ -94,6 +94,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     }
   }
 
+  // Fungsi untuk memuat data profil pengguna
   Future<void> _loadUserProfile() async {
     setState(() {
       isLoading = true;
@@ -127,6 +128,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     }
   }
 
+   // Fungsi untuk memilih gambar dari galeri
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -184,6 +186,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     }
   }
 
+  // Fungsi untuk mengupload data gambar
   Future<String?> _uploadToFirebase(Uint8List data) async {
     final destination = 'images/$currentUserId';
 
@@ -272,19 +275,23 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     // Menampilkan informasi dalam bahasa Indonesia
     String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
 
+    // Menampilkan informasi pengguna
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildUserInfoCard(const Icon(CupertinoIcons.person), "Nama", userModel!.name),
         _buildUserInfoCard(const Icon(CupertinoIcons.mail), "Email", userModel!.email),
         _buildUserInfoCard(const Icon(CupertinoIcons.person_2), "Jenis Kelamin", jkIndo),
-        _buildUserInfoCard(const Icon(CupertinoIcons.list_number_rtl), "Kelas", userModel!.kelas, isKelas: true),
+        _buildUserInfoCard(const Icon(CupertinoIcons.list_number_rtl), "Kelas", userModel!.kelas, 
+        isKelas: true),
         _buildUserInfoCard(const Icon(Icons.badge_outlined), "NISN", userModel!.nisn),
-        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, isPassword: true),
+        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, 
+        isPassword: true),
       ],
     );
   }
 
+  // Widget untuk menampilkan informasi pengguna dalam bentuk card.
   Widget _buildUserInfoCard(Icon icon, String title, String value,
       {bool isPassword = false, bool isKelas = false}) {
     return GestureDetector(
@@ -446,6 +453,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     );
   }
 
+  // Fungsi untuk mengubah kategori kelas pada siswa
   Future<void> _updateKelas(String newKelas) async {
     try {
       await FirebaseFirestore.instance
@@ -566,6 +574,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     );
   }
 
+  // Fungsi untuk mengubah password pengguna
   Future<void> _updatePassword(String newPassword) async {
     try {
       await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
@@ -581,6 +590,7 @@ class ProfileSiswaState extends State<ProfileSiswa> {
     }
   }
 
+  // Fungsi logout
   Future<void> showLogoutConfirmation() async {
     showDialog(
       context: context,

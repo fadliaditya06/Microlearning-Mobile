@@ -64,7 +64,8 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
       },
     );
   }
-
+  
+  // Fungsi untuk menghapus data pengguna
   Future<void> _deleteUsers(String id) async {
     try {
       await usersCollection.doc(id).delete();
@@ -275,6 +276,7 @@ class KelolaPenggunaState extends State<KelolaPengguna> {
                   );
                 }
 
+                // Menampilkan daftar pengguna dalam tabel kelola pengguna
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(

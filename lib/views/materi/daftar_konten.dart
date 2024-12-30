@@ -23,7 +23,7 @@ class ListKontenState extends State<ListKonten> {
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('konten');
   String searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
-
+  // Mengambil data sub bab berdasarkan filter kelas dan mata pelajaran 
   Stream<QuerySnapshot> _getSubab() {
     return userCollection
         .where('kelas', isEqualTo: widget.kelas)
@@ -119,7 +119,7 @@ class ListKontenState extends State<ListKonten> {
             ),
           ),
 
-          // StreamBuilder untuk menampilkan data subab
+          // StreamBuilder untuk menampilkan data sub bab
           StreamBuilder<QuerySnapshot>(
             stream: _getSubab(),
             builder: (context, snapshot) {
@@ -174,8 +174,8 @@ class ListKontenState extends State<ListKonten> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => KontenPelajaranPage(
-                                subabId: subab.id, // Mengirimkan id subab
+                              // Mengirimkan id sub bab
+                              builder: (context) => KontenPelajaranPage(subabId: subab.id,
                               ),
                             ),
                           );

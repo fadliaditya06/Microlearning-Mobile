@@ -10,13 +10,12 @@ class DaftarKonten extends StatelessWidget {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Fetch konten berdasarkan lessonId
+  // Mengambil data berdasarkan lessonId
   Future<List<Map<String, dynamic>>> fetchKonten() async {
     try {
       var kontenSnapshot = await _firestore
           .collection('konten')
-          .where('lessonId',
-              isEqualTo: lessonId) // Mengambil data berdasarkan lessonId
+          .where('lessonId', isEqualTo: lessonId) 
           .get();
 
       // Ubah data konten menjadi List Map
@@ -41,22 +40,18 @@ class DaftarKonten extends StatelessWidget {
     }
   }
 
+  // Fungsi menghapus konten
   Future<void> deleteContent(BuildContext context, String id) async {
     try {
-      // Hapus dokumen dari Firestore
       await _firestore.collection('konten').doc(id).delete();
 
-      // Tampilkan Snackbar untuk pemberitahuan berhasil
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data konten berhasil dihapus')),
       );
-
-      // Kembali ke halaman sebelumnya
       Navigator.pop(context);
     } catch (e) {
       print('Error deleting content: $e');
 
-      // Tampilkan Snackbar untuk pemberitahuan gagal
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Gagal menghapus konten')),
       );

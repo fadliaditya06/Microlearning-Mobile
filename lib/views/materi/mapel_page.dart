@@ -11,11 +11,10 @@ class MateriPage extends StatefulWidget {
 }
 
 class _MateriPageState extends State<MateriPage> {
-  final CollectionReference kontenCollection =
-      FirebaseFirestore.instance.collection('konten');
+  final CollectionReference kontenCollection = FirebaseFirestore.instance.collection('konten');
 
-  final Set<String> displayedClasses =
-      <String>{}; // Set untuk menyimpan mata pelajaran unik
+  // Set untuk menyimpan mata pelajaran 
+  final Set<String> displayedClasses = <String>{}; 
 
   @override
   Widget build(BuildContext context) {

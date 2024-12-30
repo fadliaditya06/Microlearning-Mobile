@@ -16,6 +16,7 @@ class TambahPengajarState extends State<TambahPengajar> {
   String? selectedSubject;
   String? selectedKelas;
 
+  // Daftar Mata Pelajaran
   final List<String> daftarPelajaran = [
     'MATEMATIKA',
     'BAHASA INDONESIA',
@@ -34,6 +35,7 @@ class TambahPengajarState extends State<TambahPengajar> {
     'ART & CRAFT',
   ];
 
+  // Daftar Kategori Kelas
   final List<String> daftarKelas = [
     'Kelas 10',
     'Kelas 11',

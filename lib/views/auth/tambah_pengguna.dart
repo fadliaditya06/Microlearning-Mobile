@@ -20,12 +20,11 @@ class RegisterState extends State<RegisterPage> {
   final TextEditingController confirmPassController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController roleIdController =
-      TextEditingController(); // Digunakan untuk NISN/NIP
-  String _selectedGender = 'Male'; // Pilihan gender default
+  final TextEditingController roleIdController = TextEditingController(); // Digunakan untuk NISN/NIP
+  String _selectedGender = 'Male'; 
 
   bool _isObscure = true;
-  var kelasOptions = ['10', '11', '12']; // Opsi kelas
+  var kelasOptions = ['10', '11', '12'];
   var options = ['Student', 'Teacher', 'Admin'];
   String role = "Student";
   String? selectedKelas;
@@ -480,6 +479,7 @@ class RegisterState extends State<RegisterPage> {
     );
   }
 
+  // Fungsi untuk menambahkan pengguna
   Future<void> signUp(String email, String password, String role) async {
     if (_formKey.currentState!.validate()) {
       try {

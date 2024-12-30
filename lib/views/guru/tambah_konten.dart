@@ -372,17 +372,17 @@ class TambahKontenState extends State<TambahKonten> {
       // Konversi mataPelajaran menjadi huruf besar 
       final mataPelajaranUpperCase = mataPelajaran?.toUpperCase();
 
-      // Simpan data ke Firestore dengan userId dan data tambahan
+      // Simpan data ke Firestore dengan data tambahan
       await FirebaseFirestore.instance.collection('konten').add({
-        'userId': user.uid, // Simpan userId
+        'userId': user.uid, 
         'lessonId': widget.lessonId,
         'judulSubBab': subBabController.text,
         'linkVideo': videoUrl,
         'pdfFileName': pdfFileName,
         'pdfUrl': pdfUrl,
-        'namaGuru': namaGuru, // Simpan nama guru
-        'kelas': kelas, // Simpan kelas
-        'mataPelajaran': mataPelajaranUpperCase, // Simpan mata pelajaran dalam huruf besar
+        'namaGuru': namaGuru, 
+        'kelas': kelas, 
+        'mataPelajaran': mataPelajaranUpperCase, 
         'createdAt': Timestamp.now(),
       });
 

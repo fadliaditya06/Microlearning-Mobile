@@ -12,16 +12,14 @@ class KontenPelajaranPage extends StatefulWidget {
   final String subabId;
 
   @override
-  _KontenPelajaranPageState createState() => _KontenPelajaranPageState();
+  KontenPelajaranPageState createState() => KontenPelajaranPageState();
 }
 
-class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
+class KontenPelajaranPageState extends State<KontenPelajaranPage> {
   late String currentUserId;
   String? imageUrl;
   String? name;
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
-
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final TextEditingController _komentarController = TextEditingController();
   late Future<DocumentSnapshot> _kontenFuture;
 
@@ -31,6 +29,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
     super.dispose();
   }
 
+  // Mengambil data konten dari Firestore
   @override
   void initState() {
     super.initState();
@@ -64,6 +63,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
     }
   }
 
+  // Fungsi untuk menambahkan komentar ke koleksi 'komentar'
   void _tambahKomentar() {
     if (_komentarController.text.isNotEmpty) {
       String userName = name ?? 'Anonim';
@@ -73,7 +73,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
         'komentar': _komentarController.text,
         'name': userName,
         'profile_image': userImage,
-        'uid': FirebaseAuth.instance.currentUser?.uid, // Menyimpan UID pengguna
+        'uid': FirebaseAuth.instance.currentUser?.uid, 
         'timestamp': FieldValue.serverTimestamp(),
       });
       _komentarController.clear();
@@ -87,8 +87,8 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
         future: _kontenFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
+            return const Center(child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)
               )
             );
           }
@@ -217,7 +217,7 @@ class _KontenPelajaranPageState extends State<KontenPelajaranPage> {
                         ),
                       ),
                     const SizedBox(height: 10),
-                    // Tombol buka PDF
+                    // Tombol membuka file PDF
                     if (pdfUrl.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),

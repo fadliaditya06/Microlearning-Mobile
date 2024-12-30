@@ -11,8 +11,7 @@ class DaftarSiswaPage extends StatefulWidget {
 }
 
 class DaftarSiswaPageState extends State<DaftarSiswaPage> {
-  final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
   Timer? _debounce;

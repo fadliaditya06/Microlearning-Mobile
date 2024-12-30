@@ -24,10 +24,10 @@ class TeacherPageState extends State<TeacherPage> {
   }
 
   static const List<Widget> _pages = <Widget>[
-    HomeContent(),
-    KelolaKontenPage(),
-    MateriPage(),
-    DaftarSiswaPage(),
+    HomeContent(), // Beranda
+    KelolaKontenPage(), // Kelola Konten
+    MateriPage(), // Materi
+    DaftarSiswaPage(), // Daftar Siswa
   ];
 
   @override
@@ -148,7 +148,7 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  List<bool> _isHovered = List.generate(5, (_) => false);
+  final List<bool> _isHovered = List.generate(5, (_) => false);
 
   final List<String> _images = [
     'assets/images/TPA_ua.png',
@@ -166,6 +166,7 @@ class _HomeContentState extends State<HomeContent> {
     'https://smait-ulilalbabbatam.sch.id/',
   ];
 
+  // Konten Dashboard 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -255,7 +256,7 @@ class _HomeContentState extends State<HomeContent> {
       ),
     );
   }
-
+  // Widget untuk membangun card interaktif 
   Widget _buildCard({
     required int index,
     required String image,

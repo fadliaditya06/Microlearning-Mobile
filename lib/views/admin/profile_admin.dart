@@ -91,6 +91,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
     }
   }
 
+  // Fungsi untuk memuat data profil admin
   Future<void> _loadAdminProfile() async {
     setState(() {
       isLoading = true;
@@ -127,6 +128,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
     }
   }
 
+  // Fungsi untuk memilih gambar dari galeri
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedImage = await picker.pickImage(source: ImageSource.gallery);
@@ -184,6 +186,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
     }
   }
 
+  // Fungsi untuk mengupload data gambar
   Future<String?> _uploadToFirebase(Uint8List data) async {
     final destination = 'images/$currentUserId';
 
@@ -270,9 +273,9 @@ class ProfileAdminState extends State<ProfileAdmin> {
     }
 
     // Menampilkan informasi dalam bahasa Indonesia
-    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ??
-        'Tidak diketahui';
-
+    String jkIndo = userModel!.genderMapping[userModel!.gender.toLowerCase()] ?? 'Tidak diketahui';
+    
+    // Menampilkan informasi pengguna
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -280,11 +283,13 @@ class ProfileAdminState extends State<ProfileAdmin> {
         _buildUserInfoCard(const Icon(CupertinoIcons.mail), "Email", userModel!.email),
         _buildUserInfoCard(const Icon(CupertinoIcons.person_2), "Jenis Kelamin", jkIndo),
         _buildUserInfoCard(const Icon(Icons.badge_outlined), "NIP", userModel!.nip),
-        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, isPassword: true),
+        _buildUserInfoCard(const Icon(CupertinoIcons.lock), "Password", userModel!.password, 
+        isPassword: true),
       ],
     );
   }
 
+  // Widget untuk menampilkan informasi pengguna dalam bentuk card.
   Widget _buildUserInfoCard(Icon icon, String title, String value,
       {bool isPassword = false}) {
     return GestureDetector(
@@ -351,6 +356,7 @@ class ProfileAdminState extends State<ProfileAdmin> {
     );
   }
 
+  // Fungsi logout
   Future<void> showLogoutConfirmation() async {
     showDialog(
       context: context,
