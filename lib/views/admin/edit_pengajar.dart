@@ -244,7 +244,7 @@ class EditPengajarState extends State<EditPengajar> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
-                                            Text('Data berhasil diperbarui')),
+                                            Text('Data pengajar berhasil diperbarui')),
                                   );
 
                                   Navigator.pop(context);

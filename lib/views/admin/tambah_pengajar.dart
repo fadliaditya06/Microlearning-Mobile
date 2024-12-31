@@ -75,7 +75,7 @@ class TambahPengajarState extends State<TambahPengajar> {
             if (!mounted) return;
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Data berhasil disimpan')),
+              const SnackBar(content: Text('Data pengajar berhasil ditambahkan')),
             );
 
             Navigator.pop(context);

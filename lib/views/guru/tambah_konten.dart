@@ -387,7 +387,7 @@ class TambahKontenState extends State<TambahKonten> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data berhasil disimpan')),
+        const SnackBar(content: Text('Data konten berhasil ditambahkan')),
       );
       Navigator.pop(context);
     } catch (e) {
