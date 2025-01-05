@@ -14,7 +14,7 @@
 - [3312301074] – Steven Situmorang
 
 #### Pengarah (Dosen & Laboran Mata Kuliah PBL) : 
-- Siskha Handayani M.Si (Manajer Proyek)
+- Siskha Handayani, M.Si (Manajer Proyek)
 - Muchamad Fajri Amirul Nasrullah, S.ST., M.Sc (Mata Kuliah Pilihan 1 – Mobile dan Proyek Inovasi Agile)
 - Sartikha, S. ST., M.Eng (Interaksi Manusia Komputer)
 - Andy Triwinarko, ST., MT., Ph.D (Rekayasa Perangkat Lunak Lanjut)
