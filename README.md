@@ -1,4 +1,4 @@
-# Judul Proyek : Aplikasi Microlearning berbasis mobile
+# Aplikasi Microlearning berbasis mobile
 
 Aplikasi microlearning berbasis mobile ini dirancang untuk mendukung proses belajar mengajar di SMAIT Ulil Albab Batam. Aplikasi ini memungkinkan siswa mengakses materi pembelajaran secara fleksibel, interaktif, dan menarik melalui perangkat mobile. Dengan konsep microlearning, materi disajikan dalam bentuk modul pembelajaran yang dapat dipelajari dalam waktu singkat, sehingga siswa dapat memahami topik-topik penting secara lebih efisien.
 
