@@ -4,11 +4,18 @@ Aplikasi microlearning berbasis mobile ini dirancang untuk mendukung proses bela
 
 ## Tampilan Aplikasi
 
-<<p align="center">
-  [![Dasbor](https://i.ibb.co/jkvN21H8/Dasbor.png)](https://ibb.co/60RMxfNy)  
-  [![Konten Pelajaran](https://i.ibb.co/60gG9Czk/Konten-Pelajaran.png)](https://ibb.co/tp8njrg9)  
-  [![Kelola Konten](https://i.ibb.co/mrDgWTrZ/Kelola-Konten.png)](https://ibb.co/My2Q0Syw)  
+<p align="center">
+  <a href="https://ibb.co/60RMxfNy">
+    <img src="https://i.ibb.co/jkvN21H8/Dasbor.png" alt="Dasbor" width="200" />
+  </a>
+  <a href="https://ibb.co/tp8njrg9">
+    <img src="https://i.ibb.co/60gG9Czk/Konten-Pelajaran.png" alt="Konten Pelajaran" width="200" />
+  </a>
+  <a href="https://ibb.co/My2Q0Syw">
+    <img src="https://i.ibb.co/mrDgWTrZ/Kelola-Konten.png" alt="Kelola Konten" width="200" />
+  </a>
 </p>
+
 
 ## Nomor ID: 
 
